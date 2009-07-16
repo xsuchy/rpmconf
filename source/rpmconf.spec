@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.1.2
+Version: 0.1.3
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -38,6 +38,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
-* Thu Jul 16 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.2-1
+* Thu Jul 16 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.3-1
 - initial version
 
