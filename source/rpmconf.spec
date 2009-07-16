@@ -34,7 +34,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%dir %{defaultdir}
 %{_usr}/sbin/*
 %{_mandir}/man8/*
 %doc LICENSE
