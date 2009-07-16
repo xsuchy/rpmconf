@@ -37,6 +37,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{defaultdir}
 %{_usr}/sbin/*
 %{_mandir}/man8/*
+%doc LICENSE
 
 %changelog
 * Thu Jul 16 2009 Miroslav Suchy <msuchy@redhat.com>
