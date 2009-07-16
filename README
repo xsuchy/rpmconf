@@ -1,0 +1,20 @@
+rpmconf
+tool to handle rpmnew and rpmsave files
+
+What it does:
+- run "rpmconf --help" and you will see :)
+- it search all config file of all installed packages and check if file with .rpmsave or .rpmnew exists.
+- It allows you to see diff of this file against current file.
+- It allows you to keep current version or the other one (rpmsave or rpmnew one).
+- it deletes .rpmsave and .rpmnew files which are identical to current file
+- after your choice it deletes the unwanted file.
+
+And what it does not do:
+- it do not delete anything. At least until you comment out DEBUG variable on begging of script.
+- it does not search for *all* rpmsave and rpmnew files. It only search for installed configuration files. If package has been uninstalled and rpmsave has been left behind, then I do not care. If rpmsave or rpmnew has been created in past and now the config file is not presented in package any more, then I do not care too.
+
+
+
+License: GPLv3
+Author: Miroslav Suchy <msuchy@redhat.com>
+
