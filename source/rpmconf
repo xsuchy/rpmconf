@@ -1,0 +1,124 @@
+#!/bin/bash
+#
+# Copyright (c) 2009 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+
+#uncomment this line if you do not want really remove your files.
+#DEBUG="echo DEBUG:"
+
+print_help () {
+        cat <<HELP
+usage: rpmconf [options]
+
+options:
+        -a, --all
+                check configuration files of all packages
+        -opackage, --owner=package
+                check only configuration files of given package
+        -ftype, --frontend=type
+                to be done
+HELP
+        exit
+}
+
+function handle_rpmnew {
+        CONF_FILE=$1
+        OTHER_FILE=$2
+        if diff $CONF_FILE $OTHER_FILE &>/dev/null; then 
+                $DEBUG rm $OTHER_FILE
+                return
+        fi
+        OPTION=0
+        while [ 0$OPTION -eq 0 -o 0$OPTION -ge 3 ]; do
+                cat <<ASK
+Configuration file $CONF_FILE is available in new version.
+Do you want to:
+    [1] Keep your original file
+     2  Install maintainer version of this file
+     3  View differencies
+ASK
+                read -u 1 -p "Your choice: " OPTION
+                if [ "$OPTION" = "" ]; then
+                        OPTION=1
+                fi 
+                if [ 0$OPTION -eq 3 ]; then
+                        diff -u $CONF_FILE $OTHER_FILE |less
+                fi
+        done
+        if [ 0$OPTION -eq 1 ]; then
+                $DEBUG rm $OTHER_FILE
+        elif [ 0$OPTION -eq 2 ]; then 
+                $DEBUG cp $OTHER_FILE $CONF_FILE
+        fi
+}
+
+function handle_rpmsave {
+        CONF_FILE=$1
+        OTHER_FILE=$2
+        if diff $CONF_FILE $OTHER_FILE &>/dev/null; then
+                $DEBUG rm $OTHER_FILE
+                return
+        fi
+        OPTION=0
+        while [ 0$OPTION -eq 0 -o 0$OPTION -ge 3 ]; do
+                cat <<ASK
+Configuration file $CONF_FILE is available in new version and maintainer recommend upgrade.
+Do you want to:
+     1  Return back your original file
+    [2] Keep maintainer new version of this file
+     3  View differencies
+ASK
+                read -u 1 -p "Your choice: " OPTION
+                if [ "$OPTION" = "" ]; then
+                        OPTION=2
+                fi
+                if [ 0$OPTION -eq 3 ]; then
+                        diff -u $OTHER_FILE $CONF_FILE |less
+                fi
+        done
+        if [ 0$OPTION -eq 1 ]; then
+                $DEBUG cp $OTHER_FILE $CONF_FILE
+        elif [ 0$OPTION -eq 2 ]; then
+                $DEBUG rm $OTHER_FILE
+        fi
+}
+
+function handle_packages {
+        PACKAGE=$1
+        rpm -qc $PACKAGE |grep -v '(contains no files)' | \
+        while read CONFFILE; do
+                if [ -f $CONFFILE.rpmnew ]; then
+                        handle_rpmnew $CONFFILE $CONFFILE.rpmnew
+                fi
+                if [ -f $CONFFILE.rpmsave ]; then
+                        handle_rpmsave $CONFFILE $CONFFILE.rpmsave
+                fi
+        done
+}
+
+if [ $# -eq 0 ]; then
+        print_help;
+fi
+while [ $# -ge 1 ]; do
+    case $1 in
+            --help | -h)  print_help;;
+            -o*) PACKAGE=$(echo $1 | cut -c3-); handle_packages $PACKAGE;;
+            --owner=*) PACKAGE=$(echo $1 | cut -d= -f2-); handle_packages $PACKAGE;;
+            --all | -a) handle_packages -a;;
+            *) echo Error: Invalid option $1
+    esac
+    shift
+done
+
+
