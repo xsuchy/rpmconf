@@ -19,15 +19,15 @@ Keep current version, place back old version or watch the diff.
 %setup -q
 
 %build
-#/usr/bin/docbook2man rpmconf.sgml
-#/usr/bin/gzip rpmconf.8
+/usr/bin/docbook2man rpmconf.sgml
+/usr/bin/gzip rpmconf.8
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man8
 mkdir -p $RPM_BUILD_ROOT/%{_usr}/sbin
 install -m 755 rpmconf $RPM_BUILD_ROOT%{_usr}/sbin
-#install -m 644 rpmconf.8.gz $RPM_BUILD_ROOT%{_mandir}/man8/
+install -m 644 rpmconf.8.gz $RPM_BUILD_ROOT%{_mandir}/man8/
 
 %clean
 rm -rf $RPM_BUILD_ROOT

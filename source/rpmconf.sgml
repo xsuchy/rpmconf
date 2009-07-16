@@ -1,0 +1,97 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
+<!ENTITY SCRIPTNAME "rpmconf" >
+<!ENTITY SCRIPTCOMMAND "rpmconf" >
+
+]>
+<refentry>
+
+<RefMeta>
+<RefEntryTitle>&SCRIPTCOMMAND;</RefEntryTitle><manvolnum>8</manvolnum>
+<RefMiscInfo>Version 0.1</RefMiscInfo>
+</RefMeta>
+
+<RefNameDiv>
+<RefName><command>&SCRIPTCOMMAND;</command></RefName>
+<RefPurpose>
+    This tool seach for .rpmnew and .rpmsave files and ask you what to do with them:
+    Keep current version, place back old version or watch the diff.
+</RefPurpose>
+</RefNameDiv>
+        -a, --all
+                check configuration files of all packages
+        -opackage, --owner=package
+                check only configuration files of given package
+        -ftype, --frontend=type
+                to be done
+
+<RefSynopsisDiv>
+<Synopsis>
+    <cmdsynopsis>
+        <command>&SCRIPTCOMMAND;</command> 
+        <arg>options <replaceable>...</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+        <arg>-a, --all</arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+        <arg>-o<replaceable>package</replaceable>, --owner=<replaceable>package</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+        <arg>-f<replaceable>type</replaceable> --frontend=<replaceable>type</replaceable></arg>
+    </cmdsynopsis>
+</Synopsis>
+</RefSynopsisDiv>
+
+<RefSect1><Title>Description</Title>
+<para>
+    Rpmconf will search for all config file of given package (or all
+    installed packages) and will check if coresponding .rpmsave or
+    .rpmnew file exist. In such case you will be asked if you want to
+    keep current version, put back old version or see diff of those two
+    files. Then it delete that unwanted file.
+</para>
+</RefSect1>
+
+<RefSect1><Title>Options</Title>
+<variablelist>
+    <varlistentry>
+        <term>-a, --all</term>
+        <listitem>
+            <para>Check configuration files of all packages.</para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-opackage, --owner=package</term>
+        <listitem>
+            <para>Check only configuration files of given package.</para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-ftype, --frontend=type</term>
+        <listitem>
+            <para>TO BE DONE. Plan is to have more frontends to handle diff.</para>
+        </listitem>
+    </varlistentry>
+
+</variablelist>
+</RefSect1>
+
+<RefSect1><Title>Note</Title>
+<para>
+Rpmconf do not handle orphaned files. E.g. if you have file /etc/foo.conf.rpmsave,
+but /etc/foo.conf do not belong to any package (was previously removed), then rpmconf
+does not touch such file.
+</para>
+
+<RefSect1><Title>See Also</Title>
+<simplelist>
+    <member>rpm(8)</member>
+</simplelist>
+</RefSect1>
+
+<RefSect1><Title>Authors</Title>
+<simplelist>
+    <member>Miroslav Suchy <email>msuchy@redhat.com</email></member>
+</simplelist>
+</RefSect1>
+</RefEntry>
