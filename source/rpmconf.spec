@@ -9,6 +9,7 @@ Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar
 BuildRoot: %{_tmppath}/%{name}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires: /usr/bin/docbook2man
 
 %description
 This tool seach for .rpmnew and .rpmsave files and ask you what to do with 
