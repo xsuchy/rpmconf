@@ -21,12 +21,11 @@ Keep current version, place back old version or watch the diff.
 
 %build
 /usr/bin/docbook2man rpmconf.sgml
-/usr/bin/gzip rpmconf.8
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -D -m 755 rpmconf $RPM_BUILD_ROOT%{_sbindir}/rpmconf
-install -D -m 644 rpmconf.8.gz $RPM_BUILD_ROOT%{_mandir}/man8/rpmconf.8
+install -D -m 644 rpmconf.8 $RPM_BUILD_ROOT%{_mandir}/man8/rpmconf.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -34,7 +33,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{_sbindir}/rpmconf
-%{_mandir}/man8/rpmconf.8.*
+%{_mandir}/man8/rpmconf.8*
 %doc LICENSE
 
 %changelog
