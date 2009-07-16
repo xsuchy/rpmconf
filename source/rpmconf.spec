@@ -9,7 +9,7 @@ Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar
 BuildRoot: %{_tmppath}/%{name}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-BuildRequires: /usr/bin/docbook2man
+BuildRequires: docbook-utils
 
 %description
 This tool seach for .rpmnew and .rpmsave files and ask you what to do with 
@@ -25,18 +25,16 @@ Keep current version, place back old version or watch the diff.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man8
-mkdir -p $RPM_BUILD_ROOT/%{_usr}/sbin
-install -m 755 rpmconf $RPM_BUILD_ROOT%{_usr}/sbin
-install -m 644 rpmconf.8.gz $RPM_BUILD_ROOT%{_mandir}/man8/
+install -D -m 755 rpmconf $RPM_BUILD_ROOT%{_sbindir}/rpmconf
+install -D -m 644 rpmconf.8.gz $RPM_BUILD_ROOT%{_mandir}/man8/rpmconf.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{_usr}/sbin/*
-%{_mandir}/man8/*
+%{_sbindir}/rpmconf
+%{_mandir}/man8/rpmconf.8.*
 %doc LICENSE
 
 %changelog
