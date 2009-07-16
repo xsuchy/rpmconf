@@ -11,7 +11,8 @@ BuildArch: noarch
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
-This tool seach for .rpmnew and .rpmsave files and ask you what to do with them.
+This tool seach for .rpmnew and .rpmsave files and ask you what to do with 
+them:
 Keep current version, place back old version or watch the diff.
 
 %prep
