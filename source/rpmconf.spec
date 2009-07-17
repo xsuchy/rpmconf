@@ -6,7 +6,7 @@ Version: 0.1.5
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-root-%(%{__id_u} -n)
+BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch: noarch
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildRequires: docbook-utils
@@ -20,7 +20,7 @@ Keep current version, place back old version or watch the diff.
 %setup -q
 
 %build
-/usr/bin/docbook2man rpmconf.sgml
+docbook2man rpmconf.sgml
 
 %install
 rm -rf $RPM_BUILD_ROOT
