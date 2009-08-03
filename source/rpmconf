@@ -35,8 +35,8 @@ HELP
 function handle_rpmnew {
         CONF_FILE=$1
         OTHER_FILE=$2
-        if diff $CONF_FILE $OTHER_FILE &>/dev/null; then 
-                $DEBUG rm $OTHER_FILE
+        if diff "$CONF_FILE" "$OTHER_FILE" &>/dev/null; then 
+                $DEBUG rm "$OTHER_FILE"
                 return
         fi
         OPTION=0
@@ -53,21 +53,21 @@ ASK
                         OPTION=1
                 fi 
                 if [ 0$OPTION -eq 3 ]; then
-                        diff -u $CONF_FILE $OTHER_FILE |less
+                        diff -u "$CONF_FILE" "$OTHER_FILE" |less
                 fi
         done
         if [ 0$OPTION -eq 1 ]; then
-                $DEBUG rm $OTHER_FILE
+                $DEBUG rm "$OTHER_FILE"
         elif [ 0$OPTION -eq 2 ]; then 
-                $DEBUG cp $OTHER_FILE $CONF_FILE
+                $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
         fi
 }
 
 function handle_rpmsave {
         CONF_FILE=$1
         OTHER_FILE=$2
-        if diff $CONF_FILE $OTHER_FILE &>/dev/null; then
-                $DEBUG rm $OTHER_FILE
+        if diff "$CONF_FILE" "$OTHER_FILE" &>/dev/null; then
+                $DEBUG rm "$OTHER_FILE"
                 return
         fi
         OPTION=0
@@ -84,13 +84,13 @@ ASK
                         OPTION=2
                 fi
                 if [ 0$OPTION -eq 3 ]; then
-                        diff -u $OTHER_FILE $CONF_FILE |less
+                        diff -u "$OTHER_FILE" "$CONF_FILE" |less
                 fi
         done
         if [ 0$OPTION -eq 1 ]; then
-                $DEBUG cp $OTHER_FILE $CONF_FILE
+                $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
         elif [ 0$OPTION -eq 2 ]; then
-                $DEBUG rm $OTHER_FILE
+                $DEBUG rm "$OTHER_FILE"
         fi
 }
 
@@ -98,11 +98,11 @@ function handle_packages {
         PACKAGE=$1
         rpm -qc $PACKAGE |grep -v '(contains no files)' | \
         while read CONFFILE; do
-                if [ -f $CONFFILE.rpmnew ]; then
-                        handle_rpmnew $CONFFILE $CONFFILE.rpmnew
+                if [ -f "$CONFFILE.rpmnew" ]; then
+                        handle_rpmnew "$CONFFILE" "$CONFFILE.rpmnew"
                 fi
                 if [ -f $CONFFILE.rpmsave ]; then
-                        handle_rpmsave $CONFFILE $CONFFILE.rpmsave
+                        handle_rpmsave "$CONFFILE" "$CONFFILE.rpmsave"
                 fi
         done
 }
