@@ -73,9 +73,9 @@ function handle_rpmsave {
         OPTION=0
         while [ 0$OPTION -eq 0 -o 0$OPTION -ge 3 ]; do
                 cat <<ASK
-Configuration file $CONF_FILE is available in new version and maintainer recommend upgrade.
+Configuration file $CONF_FILE is available in new version and maintainer recommends upgrade.
 Do you want to:
-     1  Return back your original file
+     1  Return back to your original file
     [2] Keep maintainer new version of this file
      3  View differencies
 ASK
