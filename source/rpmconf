@@ -43,8 +43,8 @@ function handle_rpmnew {
                 $DEBUG rm "$OTHER_FILE"
                 return
         fi
-        OPTION="N"
-        while [ "$OPTION" = "Y" -o "$OPTION" = "I" -o "$OPTION" = "N" -o "$OPTION" = "O" ]; do
+        OPTION=""
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" ]; do
                 cat <<ASK
 Configuration file \`$CONF_FILE'
  ==> Package distributor has shipped an updated version.
@@ -81,8 +81,8 @@ function handle_rpmsave {
                 $DEBUG rm "$OTHER_FILE"
                 return
         fi
-        OPTION="N"
-        while [ "$OPTION" = "Y" -o "$OPTION" = "I" -o "$OPTION" = "N" -o "$OPTION" = "O" ]; do
+        OPTION=""
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" ]; do
                 cat <<ASK
 Configuration file \`$CONF_FILE'
  ==> Package distributor has shipped an updated version.
