@@ -115,8 +115,7 @@ ASK
 
 function handle_packages {
         PACKAGE=$1
-        LANG= rpm -qc $PACKAGE |grep -v '(contains no files)' | \
-        while read CONFFILE; do
+        for CONFFILE in `LANG= rpm -qc $PACKAGE |grep -v '(contains no files)'`; do
                 if [ -f "$CONFFILE.rpmnew" ]; then
                         handle_rpmnew "$CONFFILE" "$CONFFILE.rpmnew"
                 fi
