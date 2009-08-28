@@ -123,6 +123,9 @@ function handle_packages {
                 if [ -f $CONFFILE.rpmsave ]; then
                         handle_rpmsave "$CONFFILE" "$CONFFILE.rpmsave"
                 fi
+                if [ -f $CONFFILE.rpmorig ]; then
+                        handle_rpmsave "$CONFFILE" "$CONFFILE.rpmorig"
+                fi
         done
 }
 

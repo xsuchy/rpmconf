@@ -13,7 +13,7 @@
 <RefNameDiv>
 <RefName><command>&SCRIPTCOMMAND;</command></RefName>
 <RefPurpose>
-    This tool seach for .rpmnew and .rpmsave files and ask you what to do with them:
+    This tool seach for .rpmnew, .rpmsave and .rpmorigfiles and ask you what to do with them:
     Keep current version, place back old version or watch the diff.
 </RefPurpose>
 </RefNameDiv>
@@ -45,8 +45,8 @@
 <RefSect1><Title>Description</Title>
 <para>
     Rpmconf will search for all config file of given package (or all
-    installed packages) and will check if coresponding .rpmsave or
-    .rpmnew file exist. In such case you will be asked if you want to
+    installed packages) and will check if coresponding .rpmsave, .rpmnew or
+    .rpmorig file exist. In such case you will be asked if you want to
     keep current version, put back old version or see diff of those two
     files. Then it delete that unwanted file.
 </para>
