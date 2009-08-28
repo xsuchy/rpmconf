@@ -71,6 +71,7 @@ ASK
                 $DEBUG rm "$OTHER_FILE"
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then 
                 $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
+                $DEBUG rm "$OTHER_FILE"
         fi
 }
 
@@ -108,6 +109,7 @@ ASK
         done
         if [ "$OPTION" = "N" -o "$OPTION" = "O" ]; then
                 $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
+                $DEBUG rm "$OTHER_FILE"
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then
                 $DEBUG rm "$OTHER_FILE"
         fi
