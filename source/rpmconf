@@ -60,7 +60,7 @@ ASK
                 if [ "$OPTION" = "" ]; then
                         OPTION="N"
                 fi
-		OPTION=`toUpper "$1"`
+		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
                         diff -u "$CONF_FILE" "$OTHER_FILE" |less
                 elif [ "$OPTION" = "Z" ]; then
@@ -99,7 +99,7 @@ ASK
                 if [ "$OPTION" = "" ]; then
                         OPTION="Y"
                 fi
-		OPTION=`toUpper "$1"`
+		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
                         diff -u "$OTHER_FILE" "$CONF_FILE" |less
 		elif [ "$OPTION" = "Z" ]; then
