@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.1.6
+Version: 0.1.7
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -12,8 +12,8 @@ Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildRequires: docbook-utils
 
 %description
-This tool seach for .rpmnew and .rpmsave files and ask you what to do with 
-them:
+This tool seach for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
+with them:
 Keep current version, place back old version or watch the diff.
 
 %prep
@@ -37,6 +37,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Fri Aug 28 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.7-1
+- add support for handling .rpmorig
+- 513794 - localisation problem
+- add support for suspending script
+
 * Fri Jul 17 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.6-1
 - addressed fedora package review notes (#7)
 
