@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.1.7
+Version: 0.1.8
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Mon Aug 31 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.8-1
+- fix copy and past typo
+
 * Fri Aug 28 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.7-1
 - add support for handling .rpmorig
 - 513794 - localisation problem
