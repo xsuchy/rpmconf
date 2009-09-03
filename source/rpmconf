@@ -28,6 +28,8 @@ options:
                 check only configuration files of given package
         -ftype, --frontend=type
                 to be done
+        -d, --debug
+                Dry run. Just show what will be done.
 HELP
         exit
 }
@@ -35,6 +37,11 @@ HELP
 function toUpper {
   echo $1 | tr "[:lower:]" "[:upper:]" 
 } 
+
+function push_to_PACKAGE {
+        PACKAGE[${#PACKAGE[@]}]=$1
+}
+
 
 function handle_rpmnew {
         CONF_FILE=$1
@@ -133,15 +140,19 @@ function handle_packages {
 if [ $# -eq 0 ]; then
         print_help;
 fi
+unset PACKAGE
 while [ $# -ge 1 ]; do
     case $1 in
             --help | -h)  print_help;;
-            -o*) PACKAGE=$(echo $1 | cut -c3-); handle_packages $PACKAGE;;
-            --owner=*) PACKAGE=$(echo $1 | cut -d= -f2-); handle_packages $PACKAGE;;
-            --all | -a) handle_packages -a;;
-            *) echo Error: Invalid option $1
+            -o*) push_to_PACKAGE $(echo $1 | cut -c3-);;
+            --owner=*) push_to_PACKAGE $(echo $1 | cut -d= -f2-);;
+            --all | -a) push_to_PACKAGE '-a';;
+            --debug | -d) DEBUG="echo DEBUG:";;
+            *) echo Error: Invalid option $1; exit;
     esac
     shift
 done
 
-
+for P in ${PACKAGE[@]}; do
+        handle_packages $P
+done

@@ -23,6 +23,8 @@
                 check only configuration files of given package
         -ftype, --frontend=type
                 to be done
+        -d, --debug
+                Dry run. Just show what will be done.
 
 <RefSynopsisDiv>
 <Synopsis>
@@ -38,6 +40,9 @@
     </cmdsynopsis>
     <cmdsynopsis>
         <arg>-f<replaceable>type</replaceable> --frontend=<replaceable>type</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+        <arg>-d, --debug</arg>
     </cmdsynopsis>
 </Synopsis>
 </RefSynopsisDiv>
@@ -72,7 +77,14 @@
             <para>TO BE DONE. Plan is to have more frontends to handle diff.</para>
         </listitem>
     </varlistentry>
-
+    <varlistentry>
+        <term>-d, --debug</term>
+        <listitem>
+            <para>Dry run. Instead of executing an action (move/remove of file) it will
+                  be echoed to standard output.
+            </para>
+        </listitem>
+    </varlistentry>
 </variablelist>
 </RefSect1>
 
