@@ -30,6 +30,8 @@ options:
                 to be done
         -d, --debug
                 Dry run. Just show what will be done.
+        -V, --version
+		display rpmconf version
 HELP
         exit
 }
@@ -148,6 +150,7 @@ while [ $# -ge 1 ]; do
             --owner=*) push_to_PACKAGE $(echo $1 | cut -d= -f2-);;
             --all | -a) push_to_PACKAGE '-a';;
             --debug | -d) DEBUG="echo DEBUG:";;
+            --version | -V) rpm -q rpmconf; exit;;
             *) echo Error: Invalid option $1; exit;
     esac
     shift
