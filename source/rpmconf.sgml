@@ -25,7 +25,8 @@
                 to be done
         -d, --debug
                 Dry run. Just show what will be done.
-
+	-V, --version
+		Display &SCRIPTCOMMAND; version.
 <RefSynopsisDiv>
 <Synopsis>
     <cmdsynopsis>
@@ -82,6 +83,15 @@
         <listitem>
             <para>Dry run. Instead of executing an action (move/remove of file) it will
                   be echoed to standard output.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-V, --version</term>
+        <listitem>
+            <para>
+                  Display &SCRIPTCOMMAND; version. This option expect that this script
+		  is installed as rpm package.
             </para>
         </listitem>
     </varlistentry>
