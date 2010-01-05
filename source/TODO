@@ -1,0 +1,6 @@
+I can check how behave those merging tools:
+ diffuse easydiff.app imediff2 mgdiff tkdiff xdiff xxdiff tkdifff
+and probably add them to rpmconf.
+
+vimdiff, gvimdiff, meld return 0 even if file was not saved
+we may handle it some way. check last modification? ask user?
