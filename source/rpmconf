@@ -59,6 +59,7 @@ function merge_conf_files {
 
 	case $MERGE_TYPE in
 		vimdiff) vimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
+		gvimdiff) gvimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		None) echo Error: you did not selected any fronted for merge.; exit 2;;
 	        *) echo Error: Invalid option $1; exit 2;;
 	esac
@@ -189,6 +190,7 @@ done
 case $MERGE_TYPE in
 	None) ;;
 	vimdiff) validate_merge_type vimdiff || exit;;
+	gvimdiff) validate_merge_type gvimdiff || exit;;
 	*) cat <<ERROR; exit;;
 Error: Invalid frontend for merge: $MERGE_TYPE
 See man page for valid list of frontends

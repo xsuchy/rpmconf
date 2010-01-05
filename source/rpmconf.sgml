@@ -75,7 +75,7 @@
     <varlistentry>
         <term>-ftype, --frontend=type</term>
         <listitem>
-            <para>Define which frontend should be used for merging. Valid options are: vimdiff</para>
+            <para>Define which frontend should be used for merging. Valid options are: vimdiff, gvimdiff</para>
         </listitem>
     </varlistentry>
     <varlistentry>
