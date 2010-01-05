@@ -22,9 +22,9 @@
         -opackage, --owner=package
                 check only configuration files of given package
         -ftype, --frontend=type
-                to be done
+                define which frontend should be used for merging
         -d, --debug
-                Dry run. Just show what will be done.
+                Dry run. Just show which file will be deleted.
 	-V, --version
 		Display &SCRIPTCOMMAND; version.
 <RefSynopsisDiv>
@@ -75,14 +75,15 @@
     <varlistentry>
         <term>-ftype, --frontend=type</term>
         <listitem>
-            <para>TO BE DONE. Plan is to have more frontends to handle diff.</para>
+            <para>Define which frontend should be used for merging. Valid options are: vimdiff</para>
         </listitem>
     </varlistentry>
     <varlistentry>
         <term>-d, --debug</term>
         <listitem>
             <para>Dry run. Instead of executing an action (move/remove of file) it will
-                  be echoed to standard output.
+                  be echoed to standard output. However executable for merging of configuration files
+		  is executed.
             </para>
         </listitem>
     </varlistentry>
@@ -113,7 +114,7 @@ does not touch such file.
 
 <RefSect1><Title>Authors</Title>
 <simplelist>
-    <member>Miroslav Suchy <email>msuchy@redhat.com</email></member>
+    <member>Miroslav Suchý <email>msuchy@redhat.com</email></member>
 </simplelist>
 </RefSect1>
 </RefEntry>

@@ -17,6 +17,8 @@
 #uncomment this line if you do not want really remove your files.
 #DEBUG="echo DEBUG:"
 
+MERGE_TYPE='None'
+
 print_help () {
         cat <<HELP
 usage: rpmconf [options]
@@ -29,7 +31,7 @@ options:
         -ftype, --frontend=type
                 to be done
         -d, --debug
-                Dry run. Just show what will be done.
+                Dry run. Just show which file will be deleted.
         -V, --version
 		display rpmconf version
 HELP
@@ -44,6 +46,23 @@ function push_to_PACKAGE {
         PACKAGE[${#PACKAGE[@]}]=$1
 }
 
+function validate_merge_type {
+	which $1 &>/dev/null || (
+		echo "Error: $1 is not installed"
+		exit 1
+	)
+}
+function merge_conf_files {
+	CONF_FILE=$1
+        OTHER_FILE=$2
+
+	case $MERGE_TYPE in
+		vimdiff) vimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
+		None) echo Error: you did not selected any fronted for merge.; exit 2;;
+	        *) echo Error: Invalid option $1; exit 2;;
+	esac
+
+}
 
 function handle_rpmnew {
         CONF_FILE=$1
@@ -53,7 +72,7 @@ function handle_rpmnew {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" ]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" ]; do
                 cat <<ASK
 Configuration file \`$CONF_FILE'
  ==> Package distributor has shipped an updated version.
@@ -61,6 +80,7 @@ Configuration file \`$CONF_FILE'
     Y or I  : install the package maintainer's version
     N or O  : keep your currently-installed version
       D     : show the differences between the versions
+      M	    : merge configuration files
       Z     : background this process to examine the situation
  The default action is to keep your current version.
 *** aliases (Y/I/N/O/D/Z) [default=N] ? 
@@ -81,6 +101,8 @@ ASK
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then 
                 $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
                 $DEBUG rm "$OTHER_FILE"
+	elif [ "$OPTION" = "M" ]; then
+                merge_conf_files "$CONFFILE" "$OTHER_FILE"
         fi
 }
 
@@ -92,7 +114,7 @@ function handle_rpmsave {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" ]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M"]; do
                 cat <<ASK
 Configuration file \`$CONF_FILE'
  ==> Package distributor has shipped an updated version.
@@ -101,6 +123,7 @@ Configuration file \`$CONF_FILE'
     Y or I  : install (keep) the package maintainer's version
     N or O  : return back to your original file
       D     : show the differences between the versions
+      M     : merge configuration files
       Z     : background this process to examine the situation
  The default action is to keep package maintainer's version.
 *** aliases (Y/I/N/O/D/Z) [default=Y] ?
@@ -114,6 +137,8 @@ ASK
                         diff -u "$OTHER_FILE" "$CONF_FILE" |less
 		elif [ "$OPTION" = "Z" ]; then
                         kill -STOP $$
+		elif [ "$OPTION" = "M" ]; then
+			merge_conf_files "$CONFFILE" "$OTHER_FILE"
                 fi
         done
         if [ "$OPTION" = "N" -o "$OPTION" = "O" ]; then
@@ -121,6 +146,8 @@ ASK
                 $DEBUG rm "$OTHER_FILE"
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then
                 $DEBUG rm "$OTHER_FILE"
+	elif [ "$OPTION" = "M" ]; then
+                merge_conf_files "$CONFFILE" "$OTHER_FILE"
         fi
 }
 
@@ -151,10 +178,21 @@ while [ $# -ge 1 ]; do
             --all | -a) push_to_PACKAGE '-a';;
             --debug | -d) DEBUG="echo DEBUG:";;
             --version | -V) rpm -q rpmconf; exit;;
+            -f*) MERGE_TYPE=$(echo $1 | cut -c3-);;
+            --frontend=*) MERGE_TYPE=$(echo $1 | cut -d= -f2-);;  
             *) echo Error: Invalid option $1; exit;
     esac
     shift
 done
+
+case $MERGE_TYPE in
+	None) ;;
+	vimdiff) validate_merge_type vimdiff || exit;;
+	*) cat <<ERROR; exit;;
+Error: Invalid frontend for merge: $MERGE_TYPE
+See man page for valid list of frontends
+ERROR
+esac
 
 for P in ${PACKAGE[@]}; do
         handle_packages $P
