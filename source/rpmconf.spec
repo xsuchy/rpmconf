@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.1.8
+Version: 0.2.1
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -15,7 +15,7 @@ BuildRequires: docbook-dtd31-sgml
 %description
 This tool seach for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
 with them:
-Keep current version, place back old version or watch the diff.
+Keep current version, place back old version, watch the diff or merge.
 
 %prep
 %setup -q
@@ -38,6 +38,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Thu Jan  7 2010 Miroslav Suchy <msuchy@redhat.com> 0.2.1-1
+- implement merging of files using vimdiff, gvimdiff, meld,
+  and kdiff3
+- added command line option --version
+- added command line option --debug
+- fix build requires on Mandriva
+
 * Mon Aug 31 2009 Miroslav Suchy <msuchy@redhat.com> 0.1.8-1
 - fix copy and past typo
 
