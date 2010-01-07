@@ -62,7 +62,7 @@ function merge_conf_files {
 		# we may handle it some way. check last modification? ask user?
 		vimdiff) vimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		gvimdiff) gvimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
-		kdiff3) kdiff3 "$CONF_FILE" "$OTHER_FILE" -o "$CONF_FILE" && $DEBUG rm "$OTHER_FILE";;
+		kdiff3) kdiff3 "$CONF_FILE" "$OTHER_FILE" -o "$CONF_FILE" && $DEBUG rm "$OTHER_FILE" "${CONF_FILE}.orig";;
 		meld) meld "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		None) echo Error: you did not selected any fronted for merge.; exit 2;;
 	        *) echo Error: Invalid option $1; exit 2;;
