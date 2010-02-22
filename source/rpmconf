@@ -63,6 +63,7 @@ function merge_conf_files {
 		# we may handle it some way. check last modification? ask user?
 		vimdiff) vimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		gvimdiff) gvimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
+                diffuse) diffuse "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		kdiff3) kdiff3 "$CONF_FILE" "$OTHER_FILE" -o "$CONF_FILE" && $DEBUG rm "$OTHER_FILE" "${CONF_FILE}.orig";;
 		meld) meld "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		None) echo Error: you did not selected any fronted for merge.; exit 2;;
@@ -196,6 +197,7 @@ case $MERGE_TYPE in
 	None) ;;
 	vimdiff) validate_merge_type vimdiff || exit;;
 	gvimdiff) validate_merge_type gvimdiff || exit;;
+        diffuse) validate_merge_type diffuse || exit;;
 	kdiff3) validate_merge_type kdiff3 || exit;;
 	meld) validate_merge_type meld || exit;;
 	*) cat <<ERROR; exit;;
