@@ -121,7 +121,7 @@ function handle_rpmsave {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M"]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" ]; do
                 cat <<ASK
 Configuration file \`$CONF_FILE'
  ==> Package distributor has shipped an updated version.
