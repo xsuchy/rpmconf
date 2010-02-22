@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.2.1
+Version: 0.2.2
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -38,6 +38,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Mon Feb 22 2010 Miroslav Suchy <msuchy@redhat.com> 0.2.2-1
+- 567318 - fix syntax error
+- add diffuse as merge frontend
+
 * Thu Jan  7 2010 Miroslav Suchy <msuchy@redhat.com> 0.2.1-1
 - implement merging of files using vimdiff, gvimdiff, meld,
   and kdiff3
