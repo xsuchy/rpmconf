@@ -13,7 +13,7 @@ BuildRequires: docbook-utils
 BuildRequires: docbook-dtd31-sgml
 
 %description
-This tool seach for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
+This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
 with them:
 Keep current version, place back old version, watch the diff or merge.
 
