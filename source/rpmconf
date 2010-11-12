@@ -32,6 +32,8 @@ options:
         -ftype, --frontend=type
                 Define which frontend should be used for merging.
                 For list of valid types see man page.
+        -c, --clean
+                Find and delete orphaned .rpmnew and .rpmsave files.
         -d, --debug
                 Dry run. Just show which file will be deleted.
         -V, --version
@@ -174,6 +176,37 @@ function handle_packages {
         done
 }
 
+function clean_orphan {
+        FILES_MERGE=$(mktemp --tmpdir --suffix=.merge rpmconf.XXXXXXXXXX)
+        FILES_DELETE=$(mktemp --tmpdir --suffix=.delete rpmconf.XXXXXXXXXX)
+        find /etc /var -name '*.rpmnew' -o -name '*.rpmsave' | \
+        while read rpmnew_rpmsave; do
+            rpmnew_rpmsave_orig=$(echo $rpmnew_rpmsave | sed 's/\(\.rpmnew\)\|\(\.rpmsave\)//g')
+            if rpm -qf $rpmnew_rpmsave_orig >/dev/null 2>&1; then
+                echo -e $(rpm -qf $rpmnew_rpmsave_orig --qf '%{name}') "\t\t$rpmnew_rpmsave" >> $FILES_MERGE
+            else
+                echo $rpmnew_rpmsave >> $FILES_DELETE
+            fi
+        done
+        if [ -s $FILES_MERGE ]; then
+            echo "This files need merge - you may want to run 'rpmconf -a':"
+            cat $FILES_MERGE
+            echo "Skipping files above."
+            echo
+            rm -f $FILES_MERGE
+        fi
+        if [ -s $FILES_DELETE ]; then
+            echo "Orphaned .rpmnew and .rpmsave files:"
+            cat $FILES_DELETE
+            read -u 1 -p "Delete this files (Y/n): " OPTION
+            OPTION=$(toUpper "$OPTION")
+            if [ "$OPTION" = "Y" -o "$OPTION" = "" ]; then
+                cat $FILES_DELETE | cut -f2 -d' ' | xargs $DEBUG rm -f 
+            fi
+            rm -f $FILES_DELETE
+        fi
+}
+
 if [ $# -eq 0 ]; then
         print_help;
 fi
@@ -187,7 +220,8 @@ while [ $# -ge 1 ]; do
             --debug | -d) DEBUG="echo DEBUG:";;
             --version | -V) rpm -q rpmconf; exit;;
             -f*) MERGE_TYPE=$(echo $1 | cut -c3-);;
-            --frontend=*) MERGE_TYPE=$(echo $1 | cut -d= -f2-);;  
+            --frontend=*) MERGE_TYPE=$(echo $1 | cut -d= -f2-);;
+            --clean | -c) clean_orphan;;
             *) echo Error: Invalid option $1; exit;
     esac
     shift

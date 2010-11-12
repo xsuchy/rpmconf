@@ -23,6 +23,8 @@
                 check only configuration files of given package
         -ftype, --frontend=type
                 define which frontend should be used for merging
+        -c, --clean
+                Find and delete orphaned .rpmnew and .rpmsave files.
         -d, --debug
                 Dry run. Just show which file will be deleted.
 	-V, --version
@@ -41,6 +43,9 @@
     </cmdsynopsis>
     <cmdsynopsis>
         <arg>-f<replaceable>type</replaceable> --frontend=<replaceable>type</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+        <arg>-c, --clean</arg>
     </cmdsynopsis>
     <cmdsynopsis>
         <arg>-d, --debug</arg>
@@ -79,6 +84,12 @@
         </listitem>
     </varlistentry>
     <varlistentry>
+        <term>-c, --clean</term>
+        <listitem>
+            <para>Find all .rpmnew and .rpmsave files in /etc and /var directories. List all files, which belongs to installed packages. Then it write all files which are orphaned and ask you if it is safe to delete them.</para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
         <term>-d, --debug</term>
         <listitem>
             <para>Dry run. Instead of executing an action (move/remove of file) it will
@@ -98,13 +109,6 @@
     </varlistentry>
 </variablelist>
 </RefSect1>
-
-<RefSect1><Title>Note</Title>
-<para>
-Rpmconf do not handle orphaned files. E.g. if you have file /etc/foo.conf.rpmsave,
-but /etc/foo.conf do not belong to any package (was previously removed), then rpmconf
-does not touch such file.
-</para>
 
 <RefSect1><Title>See Also</Title>
 <simplelist>
