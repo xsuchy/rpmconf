@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.3.0
+Version: 0.3.1
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -37,6 +37,18 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Fri Jul 08 2011 Miroslav Suchý 0.3.1-1
+- bump up version
+- add warning about --debug position sensitivity
+- scan /usr during --clean
+- introduce new option -Z to print SELinux context of old and new file
+- do not dereference links
+- allow another option : skip the current config file and go to the next one
+- show config file dates
+- we do not need perl
+- --clean - Find and delete orphaned .rpmnew and .rpmsave files.
+- fix spelling error
+
 * Mon Feb 22 2010 Miroslav Suchy <msuchy@redhat.com> 0.2.2-1
 - 567318 - fix syntax error
 - add diffuse as merge frontend
