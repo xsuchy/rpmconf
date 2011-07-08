@@ -18,6 +18,8 @@ DEBUG=''
 #uncomment this line if you do not want really remove your files.
 #DEBUG="echo DEBUG:"
 
+SELINUX=''
+
 MERGE_TYPE='None'
 
 print_help () {
@@ -38,6 +40,8 @@ options:
                 Dry run. Just show which file will be deleted.
         -V, --version
 		Display rpmconf version.
+        -Z
+                Display SELinux context of old and new file.
 HELP
         exit
 }
@@ -84,7 +88,7 @@ function handle_rpmnew {
         OPTION=""
         while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
-		ls -ltrd "$CONF_FILE" "$OTHER_FILE"
+		ls -ltrd $SELINUX "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
  ==> Package distributor has shipped an updated version.
    What would you like to do about it ?  Your options are:
@@ -128,7 +132,7 @@ function handle_rpmsave {
         OPTION=""
         while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
-		ls -ltrd "$CONF_FILE" "$OTHER_FILE"
+		ls -ltrd $SELINUX "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
  ==> Package distributor has shipped an updated version.
  ==> Maintainer forced upgrade. Your old version has been backed up.
@@ -226,6 +230,7 @@ while [ $# -ge 1 ]; do
             -f*) MERGE_TYPE=$(echo $1 | cut -c3-);;
             --frontend=*) MERGE_TYPE=$(echo $1 | cut -d= -f2-);;
             --clean | -c) clean_orphan;;
+            -Z) SELINUX="--lcontext";;
             *) echo Error: Invalid option $1; exit;
     esac
     shift

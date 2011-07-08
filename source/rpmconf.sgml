@@ -29,6 +29,8 @@
                 Dry run. Just show which file will be deleted.
 	-V, --version
 		Display &SCRIPTCOMMAND; version.
+        -Z
+                Display SELinux context of old and new file.
 <RefSynopsisDiv>
 <Synopsis>
     <cmdsynopsis>
@@ -104,6 +106,14 @@
             <para>
                   Display &SCRIPTCOMMAND; version. This option expect that this script
 		  is installed as rpm package.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-Z</term>
+        <listitem>
+            <para>
+                  Display SELinux context of old and new file. Note: if you choose to install .rpmsave version. It is copied to original filename, therefore SELinux context is reset to default value specified by SELinux policy.
             </para>
         </listitem>
     </varlistentry>
