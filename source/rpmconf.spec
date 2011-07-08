@@ -5,7 +5,7 @@ License: GPLv3
 Version: 0.3.2
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
-Source0: https://github.com/xsuchy/rpmconf/tarball/%{name}-%{version}-1
+Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch: noarch
 BuildRequires: docbook-utils
