@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.3.2
+Version: 0.3.3
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Fri Jul 08 2011 Miroslav Suchý 0.3.3-1
+- Revert "change download location to github magic url"
+
 * Fri Jul 08 2011 Miroslav Suchý 0.3.2-1
 - change download location to github magic url
 
