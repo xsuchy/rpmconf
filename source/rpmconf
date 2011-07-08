@@ -84,7 +84,7 @@ function handle_rpmnew {
         OPTION=""
         while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
-		ls -ltr "$CONF_FILE" "$OTHER_FILE"
+		ls -ltrd "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
  ==> Package distributor has shipped an updated version.
    What would you like to do about it ?  Your options are:
@@ -128,7 +128,7 @@ function handle_rpmsave {
         OPTION=""
         while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
-		ls -ltr "$CONF_FILE" "$OTHER_FILE"
+		ls -ltrd "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
  ==> Package distributor has shipped an updated version.
  ==> Maintainer forced upgrade. Your old version has been backed up.
