@@ -96,7 +96,8 @@
         <listitem>
             <para>Dry run. Instead of executing an action (move/remove of file) it will
                   be echoed to standard output. However executable for merging of configuration files
-		  is executed.
+		  is executed. Beware that this option is position sensitive. And only action specified after --debug are dry run.
+          E.g. --all --debug --clean, will run in dry run mode only for --clean, but not for --all.
             </para>
         </listitem>
     </varlistentry>
