@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.3.1
+Version: 0.3.2
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: https://github.com/xsuchy/rpmconf/tarball/%{name}-%{version}-1
@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Fri Jul 08 2011 Miroslav Suchý 0.3.2-1
+- change download location to github magic url
+
 * Fri Jul 08 2011 Miroslav Suchý 0.3.1-1
 - bump up version
 - add warning about --debug position sensitivity
