@@ -82,7 +82,7 @@ function handle_rpmnew {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" ]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
 		ls -ltr "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
@@ -93,8 +93,9 @@ function handle_rpmnew {
       D     : show the differences between the versions
       M	    : merge configuration files
       Z     : background this process to examine the situation
+      S     : skip this file
  The default action is to keep your current version.
-*** aliases (Y/I/N/O/D/Z) [default=N] ? 
+*** aliases (Y/I/N/O/D/Z/S) [default=N] ? 
 ASK
                 read -u 1 -p "Your choice: " OPTION
                 if [ "$OPTION" = "" ]; then
@@ -125,7 +126,7 @@ function handle_rpmsave {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" ]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
 		ls -ltr "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
@@ -137,8 +138,9 @@ function handle_rpmsave {
       D     : show the differences between the versions
       M     : merge configuration files
       Z     : background this process to examine the situation
+      S     : skip this file
  The default action is to keep package maintainer's version.
-*** aliases (Y/I/N/O/D/Z) [default=Y] ?
+*** aliases (Y/I/N/O/D/Z/S) [default=Y] ?
 ASK
                 read -u 1 -p "Your choice: " OPTION
                 if [ "$OPTION" = "" ]; then
