@@ -187,7 +187,7 @@ function handle_packages {
 function clean_orphan {
         FILES_MERGE=$(mktemp --tmpdir --suffix=.merge rpmconf.XXXXXXXXXX)
         FILES_DELETE=$(mktemp --tmpdir --suffix=.delete rpmconf.XXXXXXXXXX)
-        find /etc /var -name '*.rpmnew' -o -name '*.rpmsave' | \
+        find /etc /var /usr -name '*.rpmnew' -o -name '*.rpmsave' | \
         while read rpmnew_rpmsave; do
             rpmnew_rpmsave_orig=$(echo $rpmnew_rpmsave | sed 's/\(\.rpmnew\)\|\(\.rpmsave\)//g')
             if rpm -qf $rpmnew_rpmsave_orig >/dev/null 2>&1; then
