@@ -115,8 +115,8 @@ ASK
         if [ "$OPTION" = "N" -o "$OPTION" = "O" ]; then
                 $DEBUG rm "$OTHER_FILE"
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then 
-                $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
-                $DEBUG rm "$OTHER_FILE"
+                $DEBUG cp "$OTHER_FILE" "$CONF_FILE" \
+                    && $DEBUG rm "$OTHER_FILE"
 	elif [ "$OPTION" = "M" ]; then
                 merge_conf_files "$CONFFILE" "$OTHER_FILE"
         fi
@@ -160,8 +160,8 @@ ASK
                 fi
         done
         if [ "$OPTION" = "N" -o "$OPTION" = "O" ]; then
-                $DEBUG cp "$OTHER_FILE" "$CONF_FILE"
-                $DEBUG rm "$OTHER_FILE"
+                $DEBUG cp "$OTHER_FILE" "$CONF_FILE" \
+                    && $DEBUG rm "$OTHER_FILE"
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then
                 $DEBUG rm "$OTHER_FILE"
 	elif [ "$OPTION" = "M" ]; then
