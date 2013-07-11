@@ -203,7 +203,7 @@ function clean_orphan {
             fi
         done
         if [ -s $FILES_MERGE ]; then
-            echo "This files need merge - you may want to run 'rpmconf -a':"
+            echo "These files need merging - you may want to run 'rpmconf -a':"
             cat $FILES_MERGE
             echo "Skipping files above."
             echo
@@ -212,7 +212,7 @@ function clean_orphan {
         if [ -s $FILES_DELETE ]; then
             echo "Orphaned .rpmnew and .rpmsave files:"
             cat $FILES_DELETE
-            read -u 1 -p "Delete this files (Y/n): " OPTION
+            read -u 1 -p "Delete these files (Y/n): " OPTION
             RC=$?
             if [ $RC -eq 0 ]; then
                 OPTION=$(toUpper "$OPTION")
