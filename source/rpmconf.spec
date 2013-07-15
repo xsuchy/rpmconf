@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.3.3
+Version: 0.3.4
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -37,6 +37,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %changelog
+* Mon Jul 15 2013 Miroslav Suchý <miroslav@suchy.cz>
+- When overwriting the current file with an .rpmnew/.rpmsave file, check that
+  the copy worked before removing the source file.
+- Skip deleting files if user input could not be read.
+- fix few spelling typos
+
 * Fri Jul 08 2011 Miroslav Suchý 0.3.3-1
 - Revert "change download location to github magic url"
 
