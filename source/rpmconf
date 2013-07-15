@@ -102,7 +102,10 @@ function handle_rpmnew {
 *** aliases (Y/I/N/O/D/Z/S) [default=N] ? 
 ASK
                 read -u 1 -p "Your choice: " OPTION
-                if [ "$OPTION" = "" ]; then
+                RC=$?
+                if [ $RC -ne 0 ]; then
+                        OPTION="S"
+                elif [ "$OPTION" = "" ]; then
                         OPTION="N"
                 fi
 		OPTION=`toUpper "$OPTION"`
@@ -147,7 +150,10 @@ function handle_rpmsave {
 *** aliases (Y/I/N/O/D/Z/S) [default=Y] ?
 ASK
                 read -u 1 -p "Your choice: " OPTION
-                if [ "$OPTION" = "" ]; then
+                RC=$?
+                if [ $RC -ne 0 ]; then
+                        OPTION="S"
+                elif [ "$OPTION" = "" ]; then
                         OPTION="Y"
                 fi
 		OPTION=`toUpper "$OPTION"`
@@ -197,7 +203,7 @@ function clean_orphan {
             fi
         done
         if [ -s $FILES_MERGE ]; then
-            echo "This files need merge - you may want to run 'rpmconf -a':"
+            echo "These files need merging - you may want to run 'rpmconf -a':"
             cat $FILES_MERGE
             echo "Skipping files above."
             echo
@@ -206,12 +212,15 @@ function clean_orphan {
         if [ -s $FILES_DELETE ]; then
             echo "Orphaned .rpmnew and .rpmsave files:"
             cat $FILES_DELETE
-            read -u 1 -p "Delete this files (Y/n): " OPTION
-            OPTION=$(toUpper "$OPTION")
-            if [ "$OPTION" = "Y" -o "$OPTION" = "" ]; then
-                cat $FILES_DELETE | cut -f2 -d' ' | xargs $DEBUG rm -f 
+            read -u 1 -p "Delete these files (Y/n): " OPTION
+            RC=$?
+            if [ $RC -eq 0 ]; then
+                OPTION=$(toUpper "$OPTION")
+                if [ "$OPTION" = "Y" -o "$OPTION" = "" ]; then
+                    cat $FILES_DELETE | cut -f2 -d' ' | xargs $DEBUG rm -f 
+                fi
+                rm -f $FILES_DELETE
             fi
-            rm -f $FILES_DELETE
         fi
 }
 
