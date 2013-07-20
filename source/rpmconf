@@ -64,6 +64,10 @@ function merge_conf_files {
 	CONF_FILE=$1
         OTHER_FILE=$2
 
+	if [[ $MERGE_TYPE == None && -n $MERGE ]]; then
+		MERGE_TYPE=env
+	fi
+
 	case $MERGE_TYPE in
 		# vimdiff, gvimdiff, meld return 0 even if file was not saved
 		# we may handle it some way. check last modification? ask user?
