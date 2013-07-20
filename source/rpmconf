@@ -64,6 +64,10 @@ function merge_conf_files {
 	CONF_FILE=$1
         OTHER_FILE=$2
 
+	if [[ $MERGE_TYPE == None && -n $MERGE ]]; then
+		MERGE_TYPE=env
+	fi
+
 	case $MERGE_TYPE in
 		# vimdiff, gvimdiff, meld return 0 even if file was not saved
 		# we may handle it some way. check last modification? ask user?
@@ -72,6 +76,7 @@ function merge_conf_files {
                 diffuse) diffuse "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		kdiff3) kdiff3 "$CONF_FILE" "$OTHER_FILE" -o "$CONF_FILE" && $DEBUG rm "$OTHER_FILE" "${CONF_FILE}.orig";;
 		meld) meld "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
+		env) $MERGE "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
 		None) echo Error: you did not selected any frontend for merge.; exit 2;;
 	        *) echo Error: Invalid option $1; exit 2;;
 	esac
@@ -252,6 +257,7 @@ case $MERGE_TYPE in
         diffuse) validate_merge_type diffuse || exit;;
 	kdiff3) validate_merge_type kdiff3 || exit;;
 	meld) validate_merge_type meld || exit;;
+	env) echo ${MERGE:?} > /dev/null;;
 	*) cat <<ERROR; exit;;
 Error: Invalid frontend for merge: $MERGE_TYPE
 See man page for valid list of frontends
