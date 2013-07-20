@@ -64,14 +64,19 @@ function merge_conf_files {
 	CONF_FILE=$1
         OTHER_FILE=$2
 
+	if [[ $MERGE_TYPE == None && -n $MERGE ]]; then
+		MERGE_TYPE=env
+	fi
+
 	case $MERGE_TYPE in
 		# vimdiff, gvimdiff, meld return 0 even if file was not saved
 		# we may handle it some way. check last modification? ask user?
-		vimdiff) vimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
-		gvimdiff) gvimdiff "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
-                diffuse) diffuse "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
+		vimdiff) vimdiff "$CONF_FILE" "$OTHER_FILE";;
+		gvimdiff) gvimdiff "$CONF_FILE" "$OTHER_FILE";;
+                diffuse) diffuse "$CONF_FILE" "$OTHER_FILE";;
 		kdiff3) kdiff3 "$CONF_FILE" "$OTHER_FILE" -o "$CONF_FILE" && $DEBUG rm "$OTHER_FILE" "${CONF_FILE}.orig";;
-		meld) meld "$CONF_FILE" "$OTHER_FILE"; $DEBUG rm "$OTHER_FILE";;
+		meld) meld "$CONF_FILE" "$OTHER_FILE";;
+		env) $MERGE "$CONF_FILE" "$OTHER_FILE";;
 		None) echo Error: you did not selected any frontend for merge.; exit 2;;
 	        *) echo Error: Invalid option $1; exit 2;;
 	esac
@@ -86,7 +91,7 @@ function handle_rpmnew {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
 		ls -ltrd $SELINUX "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
@@ -111,6 +116,8 @@ ASK
 		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
                         diff -u "$CONF_FILE" "$OTHER_FILE" |less
+		elif [ "$OPTION" = "M" ]; then
+			merge_conf_files "$CONFFILE" "$OTHER_FILE"
                 elif [ "$OPTION" = "Z" ]; then
 			kill -STOP $$
 		fi
@@ -120,8 +127,6 @@ ASK
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then 
                 $DEBUG cp "$OTHER_FILE" "$CONF_FILE" \
                     && $DEBUG rm "$OTHER_FILE"
-	elif [ "$OPTION" = "M" ]; then
-                merge_conf_files "$CONFFILE" "$OTHER_FILE"
         fi
 }
 
@@ -133,7 +138,7 @@ function handle_rpmsave {
                 return
         fi
         OPTION=""
-        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "M" -a "$OPTION" != "S" ]; do
+        while [ "$OPTION" != "Y" -a "$OPTION" != "I" -a "$OPTION" != "N" -a "$OPTION" != "O" -a "$OPTION" != "S" ]; do
 		echo "Configuration file \`$CONF_FILE'"
 		ls -ltrd $SELINUX "$CONF_FILE" "$OTHER_FILE"
                 cat <<ASK
@@ -170,8 +175,6 @@ ASK
                     && $DEBUG rm "$OTHER_FILE"
         elif [ "$OPTION" = "Y" -o "$OPTION" = "I" ]; then
                 $DEBUG rm "$OTHER_FILE"
-	elif [ "$OPTION" = "M" ]; then
-                merge_conf_files "$CONFFILE" "$OTHER_FILE"
         fi
 }
 
@@ -252,6 +255,7 @@ case $MERGE_TYPE in
         diffuse) validate_merge_type diffuse || exit;;
 	kdiff3) validate_merge_type kdiff3 || exit;;
 	meld) validate_merge_type meld || exit;;
+	env) echo ${MERGE:?} > /dev/null;;
 	*) cat <<ERROR; exit;;
 Error: Invalid frontend for merge: $MERGE_TYPE
 See man page for valid list of frontends
