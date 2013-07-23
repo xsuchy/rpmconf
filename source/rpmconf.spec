@@ -10,11 +10,21 @@ BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch: noarch
 BuildRequires: docbook-utils
 BuildRequires: docbook-dtd31-sgml
+Requires: %{name}-base
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
 with them:
 Keep current version, place back old version, watch the diff or merge.
+
+%package base
+Summary: Filesystem for %{name}
+Group: Applications/System
+Requires: %{name} = %{version}-%{release}
+BuildArch: noarch
+
+%description base
+Directory hierarchy for installation scripts, which are handled by rpmconf.
 
 %prep
 %setup -q
@@ -27,6 +37,8 @@ rm -rf $RPM_BUILD_ROOT
 install -D -m 755 rpmconf $RPM_BUILD_ROOT%{_sbindir}/rpmconf
 install -D -m 644 rpmconf.8 $RPM_BUILD_ROOT%{_mandir}/man8/rpmconf.8
 
+mkdir %{buildroot}%{_datadir}/rpmconf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -35,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/rpmconf
 %{_mandir}/man8/rpmconf.8*
 %doc LICENSE
+
+%files base
+%dir %{_datadir}/rpmconf
 
 %changelog
 * Mon Jul 15 2013 Miroslav Suchý <miroslav@suchy.cz>
