@@ -190,6 +190,18 @@ function handle_packages {
         done
 }
 
+function configure_packages {
+        PACKAGE=$1
+        if [ "$PACKAGE" = "-a" ]; then
+                # this is faster then getting list of all packages and looping through
+                for FILE in /usr/share/rpmconf/*; do
+                        rpm -qf $FILE >/dev/null 2>/dev/null && $FILE
+                done
+        elif [ -x /usr/share/rpmconf/$PACKAGE ]; then
+                /usr/share/rpmconf/$PACKAGE
+        fi
+}
+
 function clean_orphan {
         FILES_MERGE=$(mktemp --tmpdir --suffix=.merge rpmconf.XXXXXXXXXX)
         FILES_DELETE=$(mktemp --tmpdir --suffix=.delete rpmconf.XXXXXXXXXX)
@@ -260,4 +272,8 @@ esac
 
 for P in ${PACKAGE[@]}; do
         handle_packages $P
+done
+
+for P in ${PACKAGE[@]}; do
+        configure_packages $P
 done
