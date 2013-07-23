@@ -34,8 +34,8 @@ docbook2man rpmconf.sgml
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -D -m 755 rpmconf $RPM_BUILD_ROOT%{_sbindir}/rpmconf
-install -D -m 644 rpmconf.8 $RPM_BUILD_ROOT%{_mandir}/man8/rpmconf.8
+install -D -m 755 rpmconf %{buildroot}%{_sbindir}/rpmconf
+install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
 
 mkdir %{buildroot}%{_datadir}/rpmconf
 
