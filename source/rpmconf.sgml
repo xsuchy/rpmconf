@@ -63,6 +63,15 @@
     keep current version, put back old version or see diff of those two
     files. Then it delete that unwanted file.
 </para>
+<para>
+    Additionally rpmconf can also handle application configuration, if
+    application support rpmconf.
+    Application must have executable file present in /usr/share/rpmconf/.
+    The file must have the same name as package itself and the package
+    must own that file.
+    The executable must be idempotent. I.e. you can execute it multiple times
+    and additional run, must not change something. Ideally it will be
+    Puppet/Chef/Ansible/CFengine manifest.
 </RefSect1>
 
 <RefSect1><Title>Options</Title>
