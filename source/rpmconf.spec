@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.3.4
+Version: 0.3.5
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -52,6 +52,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Thu Jul 25 2013 Miroslav Suchý <msuchy@redhat.com> 0.3.5-1
+- add ability to configure packages
+- replace old macro RPM_BUILD_ROOT
+- create subpackage -base which will own /usr/share/rpmconf
+- document ability to handle app configuration
+
 * Mon Jul 15 2013 Miroslav Suchý <miroslav@suchy.cz>
 - When overwriting the current file with an .rpmnew/.rpmsave file, check that
   the copy worked before removing the source file.
