@@ -64,7 +64,7 @@ function merge_conf_files {
 	CONF_FILE=$1
         OTHER_FILE=$2
 
-	if [[ $MERGE_TYPE == None && -n $MERGE ]]; then
+	if [ "$MERGE_TYPE" == "None" -a -n "$MERGE" ]; then
 		MERGE_TYPE=env
 	fi
 
