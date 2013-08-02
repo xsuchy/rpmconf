@@ -55,7 +55,7 @@ function push_to_PACKAGE {
 }
 
 function validate_merge_type {
-	which $1 &>/dev/null || (
+	type "$1" &>/dev/null || (
 		echo "Error: $1 is not installed"
 		exit 1
 	)
@@ -64,7 +64,9 @@ function merge_conf_files {
 	CONF_FILE=$1
         OTHER_FILE=$2
 
-	if [ "$MERGE_TYPE" == "None" -a -n "$MERGE" ]; then
+	if [ "$MERGE_TYPE" == "None" -a -n "$MERGE" ] \
+            && validate_merge_type $MERGE
+        then
 		MERGE_TYPE=env
 	fi
 
@@ -257,7 +259,12 @@ case $MERGE_TYPE in
         diffuse) validate_merge_type diffuse || exit;;
 	kdiff3) validate_merge_type kdiff3 || exit;;
 	meld) validate_merge_type meld || exit;;
-	env) echo ${MERGE:?} > /dev/null;;
+	env) 
+        if ! validate_merge_type $MERGE; then
+                echo ${MERGE:?} > /dev/null
+                exit
+        fi
+        ;;
 	*) cat <<ERROR; exit;;
 Error: Invalid frontend for merge: $MERGE_TYPE
 See man page for valid list of frontends
