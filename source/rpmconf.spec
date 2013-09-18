@@ -20,7 +20,6 @@ Keep current version, place back old version, watch the diff or merge.
 %package base
 Summary: Filesystem for %{name}
 Group: Applications/System
-Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description base
