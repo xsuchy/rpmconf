@@ -13,8 +13,7 @@
 <RefNameDiv>
 <RefName><command>&SCRIPTCOMMAND;</command></RefName>
 <RefPurpose>
-    This tool search for .rpmnew, .rpmsave and .rpmorigfiles and ask you what to do with them:
-    Keep current version, place back old version or watch the diff.
+    This tool search for .rpmnew, .rpmsave and .rpmorigfiles and ask you what to do with them: Keep current version, place back old version or watch the diff.
 </RefPurpose>
 </RefNameDiv>
 <RefSynopsisDiv>
