@@ -193,10 +193,12 @@ function handle_packages {
 function configure_packages {
         PACKAGE=$1
         if [ "$PACKAGE" = "-a" ]; then
-                # this is faster then getting list of all packages and looping through
-                for FILE in /usr/share/rpmconf/*; do
-                        rpm -qf $FILE >/dev/null 2>/dev/null && $FILE
-                done
+                if [ -d /usr/share/rpmconf ]; then
+                        # this is faster then getting list of all packages and looping through
+                        for FILE in /usr/share/rpmconf/*; do
+                                rpm -qf $FILE >/dev/null 2>/dev/null && $FILE
+                        done
+                fi
         elif [ -x /usr/share/rpmconf/$PACKAGE ]; then
                 /usr/share/rpmconf/$PACKAGE
         fi
