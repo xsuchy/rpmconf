@@ -59,6 +59,17 @@ or like this for all packages:
     -* Tar: (tar).                   Making tape (or disk) archives.
 
 
+How to build package:
+
+  yum install tito
+  cd source
+  tito build --rpm
+
+Hacking:
+  commit your code (localy is fine)
+  cd source
+  tito build --test --rpm
+
 License: GPLv3
 Author: Miroslav Suchy <msuchy@redhat.com>
 
