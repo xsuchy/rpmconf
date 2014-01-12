@@ -38,6 +38,9 @@ options:
                 Find and delete orphaned .rpmnew and .rpmsave files.
         -d, --debug
                 Dry run. Just show which file will be deleted.
+        -D, --diff
+                Non-interactive diff mode. Useful to audit configs.
+                Use with -a or -o options.
         -V, --version
 		Display rpmconf version.
         -Z
@@ -52,6 +55,16 @@ function toUpper {
 
 function push_to_PACKAGE {
         PACKAGE[${#PACKAGE[@]}]=$1
+}
+
+function show_diff {
+        old_file=$1
+        new_file=$2
+        if [ "$MODE" = "diff" ]; then
+                diff -u "$old_file" "$new_file"
+        else
+                diff -u "$old_file" "$new_file" | less
+        fi
 }
 
 function validate_merge_type {
@@ -110,7 +123,7 @@ ASK
                 fi
 		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
-                        diff -u "$CONF_FILE" "$OTHER_FILE" |less
+                        showdiff "$CONF_FILE" "$OTHER_FILE"
                 elif [ "$OPTION" = "Z" ]; then
 			kill -STOP $$
 		fi
@@ -158,7 +171,7 @@ ASK
                 fi
 		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
-                        diff -u "$OTHER_FILE" "$CONF_FILE" |less
+                        showdiff "$OTHER_FILE" "$CONF_FILE"
 		elif [ "$OPTION" = "Z" ]; then
                         kill -STOP $$
 		elif [ "$OPTION" = "M" ]; then
@@ -178,6 +191,12 @@ ASK
 function handle_packages {
         PACKAGE=$1
         for CONFFILE in `LANG= rpm -qc $PACKAGE |grep -v '(contains no files)'`; do
+            if [ "$MODE" = "diff" ]; then
+                # Non-interactive diff mode.
+                [ -f "$CONFFILE.rpmnew"  ] && show_diff "$CONFFILE" "$CONFFILE.rpmnew"
+                [ -f "$CONFFILE.rpmsave" ] && show_diff "$CONFFILE.rpmsave" "$CONFFILE"
+                [ -f "$CONFFILE.rpmorig" ] && show_diff "$CONFFILE.rpmorig" "$CONFFILE"
+            else
                 if [ -f "$CONFFILE.rpmnew" ]; then
                         handle_rpmnew "$CONFFILE" "$CONFFILE.rpmnew"
                 fi
@@ -187,6 +206,7 @@ function handle_packages {
                 if [ -f $CONFFILE.rpmorig ]; then
                         handle_rpmsave "$CONFFILE" "$CONFFILE.rpmorig"
                 fi
+            fi
         done
 }
 
@@ -243,6 +263,7 @@ unset PACKAGE
 while [ $# -ge 1 ]; do
     case $1 in
             --help | -h)  print_help;;
+            --diff | -D)  MODE="diff";;
             -o*) push_to_PACKAGE $(echo $1 | cut -c3-);;
             --owner=*) push_to_PACKAGE $(echo $1 | cut -d= -f2-);;
             --all | -a) push_to_PACKAGE '-a';;

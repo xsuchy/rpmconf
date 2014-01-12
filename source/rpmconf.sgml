@@ -38,6 +38,9 @@
         <arg>-d, --debug</arg>
     </cmdsynopsis>
     <cmdsynopsis>
+        <arg>-D, --diff</arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
         <arg>-Z</arg>
     </cmdsynopsis>
 
@@ -96,6 +99,16 @@
                   be echoed to standard output. However executable for merging of configuration files
 		  is executed. Beware that this option is position sensitive. And only action specified after --debug are dry run.
           E.g. --all --debug --clean, will run in dry run mode only for --clean, but not for --all.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-D, --diff</term>
+        <listitem>
+            <para>
+                  Non-interactive diff mode.
+                  This option works with <literal>--owner</literal> and <literal>--all</literal>.
+                  Useful to audit config files after package upgrades.
             </para>
         </listitem>
     </varlistentry>
