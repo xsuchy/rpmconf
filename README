@@ -70,6 +70,13 @@ Hacking:
   cd source
   tito build --test --rpm
 
+History:
+Originally there was no such tool for RPM world. I came from Debian world where handling
+of configuration files is directly in apt. Since rpm is non-interactive, such handling
+must be in separate tool. Therefore I started creating rpmconf, which is very similar
+to Debian configuration handling. I even try to copy as much as possible the frontend
+strings and formating as I hope that sysadmins appreciate unified UI in Debian and Fedora.
+
 License: GPLv3
 Author: Miroslav Suchy <msuchy@redhat.com>
 
