@@ -123,7 +123,7 @@ ASK
                 fi
 		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
-                        showdiff "$CONF_FILE" "$OTHER_FILE"
+                        show_diff "$CONF_FILE" "$OTHER_FILE"
                 elif [ "$OPTION" = "Z" ]; then
 			kill -STOP $$
 		fi
@@ -171,7 +171,7 @@ ASK
                 fi
 		OPTION=`toUpper "$OPTION"`
                 if [ "$OPTION" = "D" ]; then
-                        showdiff "$OTHER_FILE" "$CONF_FILE"
+                        show_diff "$OTHER_FILE" "$CONF_FILE"
 		elif [ "$OPTION" = "Z" ]; then
                         kill -STOP $$
 		elif [ "$OPTION" = "M" ]; then
