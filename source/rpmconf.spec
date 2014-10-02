@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 0.3.6
+Version: 0.3.7
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Thu Oct 02 2014 Miroslav Suchý 0.3.7-1
+- when there is no error return 0
+
 * Sun Jan 12 2014 Miroslav Suchý <miroslav@suchy.cz> 0.3.6-1
 - add non-interactive --diff mode
 - remove some white space in NAME section
