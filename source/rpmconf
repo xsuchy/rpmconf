@@ -298,3 +298,5 @@ done
 for P in ${PACKAGE[@]}; do
         configure_packages $P
 done
+
+exit 0
