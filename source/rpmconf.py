@@ -21,6 +21,8 @@ import re
 import rpm
 import signal
 import subprocess
+import sys
+import tempfile
 
 SELINUX = ''
 
@@ -135,41 +137,114 @@ def handle_package(package):
         if os.access(conf_file + ".rpmorig", os.F_OK):
             handle_rpmsave(conf_file, conf_file + ".rpmorig")
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-a', '--all', dest='all', action='store_true',
-                   help='Check configuration files of all packages.')
-parser.add_argument('-o', '--owner', dest='owner', action='append', metavar='PACKAGE',
-                   help='Check only configuration files of given package.')
-parser.add_argument('-f', '--frontend', dest='frontend', action='store', metavar='EDITOR',
-                   help='Define which frontend should be used for merging. For list of valid types see man page.')
-parser.add_argument('-c', '--clean', dest='clean', action='store_true',
-                   help='Find and delete orphaned .rpmnew and .rpmsave files.')
-parser.add_argument('-d', '--debug', dest='debug', action='store_true',
-                   help='Dry run. Just show which file will be deleted.')
-parser.add_argumetn('-D', '--diff', dest='diff', action='store_true',
-                   help='Non-interactive diff mode. Useful to audit configs. Use with -a or -o options.'
-parser.add_argument('-V', '--version', dest='version', action='store_true',
-                   help='Display rpmconf version.')
-parser.add_argument('-Z', dest='selinux', action='store_true',
-                   help='Display SELinux context of old and new file.')
+def clean_orphan_file(rpmnew_rpmsave):
+    # rpmnew_rpmsave is lowercase name of rpmnew/rpmsave file
+    (rpmnew_rpmsave_orig, _) = os.path.splitext(rpmnew_rpmsave)
+    package_merge = file_delete = None 
+    try:
+        package_merge = subprocess.check_output(["/usr/bin/rpm", '-qf', rpmnew_rpmsave_orig, '--qf', '%{name}'], universal_newlines=True)
+    except subprocess.CalledProcessError:
+        file_delete = rpmnew_rpmsave_orig
+    return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave], file_delete)
 
-args = parser.parse_args()
+def clean_orphan(args):
+    FILES_MERGE = []
+    FILES_DELETE = []
+    sys.stdout.write("Searching through: ")
+    for topdir in ['/etc', '/var', '/usr']:
+        sys.stdout.write(topdir + " ")
+        sys.stdout.flush()
+        for root, dirs, files in os.walk(topdir, followlinks=True):
+            #print(root)
+            #import pdb; pdb.set_trace()
+            for name in files:
+                l_name = os.path.join(root, name)
+                #if name == 'local_policy.jar.rpmnew':
+                #    import pdb; pdb.set_trace()
+                if os.path.splitext(l_name)[1] in ['.rpmnew', '.rpmsave']:
+                    (file_merge, file_delete) = clean_orphan_file(l_name)
+                    if file_merge[0]:
+                        FILES_MERGE.append(file_merge)
+                    if file_delete:
+                        FILES_DELETE.append(file_delete)
+    sys.stdout.write("\n")
+    if FILES_MERGE:
+        print("These files need merging - you may want to run 'rpmconf -a':")
+        for (package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave) in FILES_MERGE:
+            print("{0}: {1}".format(package_merge.ljust(20), rpmnew_rpmsave))
+        print("Skipping files above.\n")
+    if FILES_DELETE:
+        print("Orphaned .rpmnew and .rpmsave files:")
+        for file_delete in FILES_DELETE:
+            print(file_delete)
+        answer = None
+        while answer not in ["Y", "N", ""]:
+            answer = input("Delete these files (Y/n): ").upper()
+        if answer in ["Y", ""]:
+            if args.debug:
+                print("rm {0}".format(" ".join(FILES_DELETE)))
+            else:
+                for file_delete in FILES_DELETE:
+                    os.unlink(file_delete)
+    else:
+        print("No orphaned .rpmnew and .rpmsave files found.")
 
-if args.version:
-    print(subprocess.check_output(["/usr/bin/rpm", '-q', 'rpmconf']))
 
-print(args.owner)
 
-packages = []
-ts = rpm.TransactionSet()
-if args.all:
-    packages = [ ts.dbMatch() ]
-elif args.owner:
-    for o in args.owner:
-        print(o)
-        mi = ts.dbMatch('name', o)
-        packages.append(mi)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a', '--all', dest='all', action='store_true',
+                       help='Check configuration files of all packages.')
+    parser.add_argument('-c', '--clean', dest='clean', action='store_true',
+                       help='Find and delete orphaned .rpmnew and .rpmsave files.')
+    parser.add_argument('-d', '--debug', dest='debug', action='store_true',
+                       help='Dry run. Just show which file will be deleted.')
+    parser.add_argument('-D', '--diff', dest='diff', action='store_true',
+                       help='Non-interactive diff mode. Useful to audit configs. Use with -a or -o options.')
+    parser.add_argument('-f', '--frontend', dest='frontend', action='store', metavar='EDITOR',
+                       help='Define which frontend should be used for merging. For list of valid types see man page.')
+    parser.add_argument('-o', '--owner', dest='owner', action='append', metavar='PACKAGE',
+                       help='Check only configuration files of given package.')
+    parser.add_argument('-V', '--version', dest='version', action='store_true',
+                       help='Display rpmconf version.')
+    parser.add_argument('-Z', dest='selinux', action='store_true',
+                       help='Display SELinux context of old and new file.')
+    args = parser.parse_args()
+    
+    if args.version:
+        print(subprocess.check_output(["/usr/bin/rpm", '-q', 'rpmconf']))
+        sys.exit(0)
+    if not (args.owner or args.all or args.clean):
+        print(parser.print_usage())
+        sys.exit(1)
+    if args.diff:
+        MODE="diff"
+    else:
+        MODE=""
+    if args.selinux:
+        SELINUX="--lcontext"
+    else:
+        SELINUX=""
+    
+    packages = []
+    ts = rpm.TransactionSet()
+    if args.all:
+        packages = [ ts.dbMatch() ]
+    elif args.owner:
+        for o in args.owner:
+            print(o)
+            mi = ts.dbMatch('name', o)
+            packages.append(mi)
+    
+    for mi in packages:
+        for package_hdr in mi:
+            handle_package(package_hdr)
+    
+    if args.clean:
+        clean_orphan(args)
 
-for mi in packages:
-    for package_hdr in mi:
-        handle_package(package_hdr)
+
+try:
+    main()
+except KeyboardInterrupt:
+    sys.exit(2)
