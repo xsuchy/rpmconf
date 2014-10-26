@@ -144,8 +144,8 @@ def clean_orphan_file(rpmnew_rpmsave):
     try:
         package_merge = subprocess.check_output(["/usr/bin/rpm", '-qf', rpmnew_rpmsave_orig, '--qf', '%{name}'], universal_newlines=True)
     except subprocess.CalledProcessError:
-        file_delete = rpmnew_rpmsave_orig
-    return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave], rpmnew_rpmsave_orig)
+        file_delete = rpmnew_rpmsave
+    return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave], file_delete)
 
 def clean_orphan(args):
     FILES_MERGE = []
