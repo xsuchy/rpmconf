@@ -145,7 +145,7 @@ def clean_orphan_file(rpmnew_rpmsave):
         package_merge = subprocess.check_output(["/usr/bin/rpm", '-qf', rpmnew_rpmsave_orig, '--qf', '%{name}'], universal_newlines=True)
     except subprocess.CalledProcessError:
         file_delete = rpmnew_rpmsave_orig
-    return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave], file_delete)
+    return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave], rpmnew_rpmsave_orig)
 
 def clean_orphan(args):
     FILES_MERGE = []
@@ -155,12 +155,9 @@ def clean_orphan(args):
         sys.stdout.write(topdir + " ")
         sys.stdout.flush()
         for root, dirs, files in os.walk(topdir, followlinks=True):
-            #print(root)
-            #import pdb; pdb.set_trace()
+            # TODO - skip /var/lib/mock/
             for name in files:
                 l_name = os.path.join(root, name)
-                #if name == 'local_policy.jar.rpmnew':
-                #    import pdb; pdb.set_trace()
                 if os.path.splitext(l_name)[1] in ['.rpmnew', '.rpmsave']:
                     (file_merge, file_delete) = clean_orphan_file(l_name)
                     if file_merge[0]:
