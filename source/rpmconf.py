@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# vim: noai:ts=4:sw=4
+# vim: noai:ts=4:sw=4:expandtab
 
 # This software is licensed to you under the GNU General Public License,
 # version 3 (GPLv3). There is NO WARRANTY for this software, express or
@@ -37,6 +37,13 @@ def copy(src, dst):
         os.symlink(linkto, dst)
     else:
         shutil.copy2(src, dst)
+
+def overwrite(args, src, dst):
+    if args.debug:
+        print("cp --no-dereference {0} {1}".format(src, dst))
+    else:
+        copy(src, dst)
+        remove(args, src)
 
 def get_list_of_config(package):
     """ return list of config files for give package """
@@ -105,9 +112,9 @@ def handle_rpmnew(args, conf_file, other_file):
     while (option not in ["Y", "I", "N", "O", "M", "S"]):
         print("Configuration file '{}'".format(conf_file))
         if SELINUX:
-            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', SELINUX, conf_file, other_file]))
+            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', SELINUX, conf_file, other_file], universal_newlines=True))
         else:
-            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', conf_file, other_file]))
+            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', conf_file, other_file], universal_newlines=True))
         print(prompt)
         try:
             option = flush_input("Your choice: ").upper()
@@ -118,7 +125,7 @@ def handle_rpmnew(args, conf_file, other_file):
 
         if option == "D":
             p1 = subprocess.Popen(['/usr/bin/diff', '-u', conf_file, other_file], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=subprocess.PIPE, universal_newlines=True)
             p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
             output = p2.communicate()[0]
             print(output)
@@ -128,8 +135,7 @@ def handle_rpmnew(args, conf_file, other_file):
     if option in ["N", "O"]:
         remove(args, other_file)
     if option in ["Y", "I"]:
-        copy(other_file, conf_file)
-        remove(args, other_file)
+        overwrite(args, other_file, conf_file)
     if option == "M":
         merge_conf_files(args, conf_file, other_file)
 
@@ -143,7 +149,7 @@ def handle_package(args, package):
     """
     for conf_file in get_list_of_config(package):
         if os.access(conf_file + ".rpmnew", os.F_OK):
-            handle_rpmnew(args, conf_file, conf_file + ".rpmsave")
+            handle_rpmnew(args, conf_file, conf_file + ".rpmnew")
         if os.access(conf_file + ".rpmsave", os.F_OK):
             handle_rpmsave(conf_file, conf_file + ".rpmsave")
         if os.access(conf_file + ".rpmorig", os.F_OK):
@@ -253,3 +259,7 @@ try:
     main()
 except KeyboardInterrupt:
     sys.exit(2)
+except PermissionError as e:
+    print(e)
+    print('You have to run this program as root.')
+    sys.exit(3)
