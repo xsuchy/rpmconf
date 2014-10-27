@@ -12,19 +12,31 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-from __future__ import print_function
+from termios import tcflush, TCIOFLUSH
 
 import argparse
-import difflib
 import os
 import re
 import rpm
 import signal
+import shutil
 import subprocess
 import sys
-import tempfile
 
-SELINUX = ''
+SELINUX = None
+
+def flush_input(question):
+    """ Flush stdin and then ask the question. """
+    tcflush(sys.stdin, TCIOFLUSH)
+    return input(question)
+
+def copy(src, dst):
+    """ Copy src to dst."""
+    if os.path.islink(src):
+        linkto = os.readlink(src)
+        os.symlink(linkto, dst)
+    else:
+        shutil.copy2(src, dst)
 
 def get_list_of_config(package):
     """ return list of config files for give package """
@@ -39,43 +51,43 @@ def get_list_of_config(package):
 def differ(file_name1, file_name2):
     """ returns True if files differ """
     try:
-        subprocess.check_call(['/usr/bin/diff', '-q'])
+        subprocess.check_call(['/usr/bin/diff', '-q', file_name1, file_name2])
         return False
-    except CalledProcessError:
+    except subprocess.CalledProcessError:
         return True
 
-def remove(conf_file):
+def remove(args, conf_file):
     if args.debug:
         print("rm {}".format(conf_file))
     else:
         os.unlink(conf_file)
 
-def merge_conf_files(conf_file, other_file):
+def merge_conf_files(args, conf_file, other_file):
     # vimdiff, gvimdiff, meld return 0 even if file was not saved
     # we may handle it some way. check last modification? ask user?
-    if arg.frontend == 'vimdiff':
+    if args.frontend == 'vimdiff':
         subprocess.check_call(['/usr/bin/vimdiff', conf_file, other_file])
-        os.remove(other_file)
-    elif arg.frontend == 'gvimdiff':
+        remove(args, other_file)
+    elif args.frontend == 'gvimdiff':
         subprocess.check_call(['/usr/bin/gvimdiff', conf_file, other_file])
-        os.remove(other_file)
-    elif arg.frontend == 'diffuse':
+        remove(args, other_file)
+    elif args.frontend == 'diffuse':
         subprocess.check_call(['/usr/bin/diffuse', conf_file, other_file])
-        os.remove(other_file)
-    elif arg.frontend == 'kdiff3':
+        remove(args, other_file)
+    elif args.frontend == 'kdiff3':
         subprocess.check_call(['/usr/bin/kdiff3', conf_file, other_file, '-o', conf_file])
-        os.remove(other_file)
-        os.remove(conf_file+".orig")
-    elif arg.frontend == 'meld':
+        remove(args, other_file)
+        remove(args, conf_file+".orig")
+    elif args.frontend == 'meld':
         subprocess.check_call(['/usr/bin/meld', conf_file, other_file])
-        os.remove(other_file)
+        remove(args, other_file)
     else:
         sys.stderr.write("Error: you did not selected any frontend for merge.")
         sys.exit(2)
 
-def handle_rpmnew(conf_file, other_file):
+def handle_rpmnew(args, conf_file, other_file):
     if not differ(conf_file, other_file):
-        os.remove(other_file)
+        remove(args, other_file)
         return
 
     prompt = """ ==> Package distributor has shipped an updated version.
@@ -98,40 +110,40 @@ def handle_rpmnew(conf_file, other_file):
             print(subprocess.check_output(['/usr/bin/ls', '-ltrd', conf_file, other_file]))
         print(prompt)
         try:
-            option = raw_input("Your choice: ")
+            option = flush_input("Your choice: ").upper()
         except EOFError:
             option = "S"
         if not option:
             option = "N"
-        option = option.upper()
 
         if option == "D":
-            p1 = Popen(['/usr/bin/diff', '-u', conf_file, other_file], stdout=PIPE)
-            p2 = Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=PIPE)
+            p1 = subprocess.Popen(['/usr/bin/diff', '-u', conf_file, other_file], stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=subprocess.PIPE)
             p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
             output = p2.communicate()[0]
+            print(output)
         if option == "Z":
             print("Run command 'fg' to continue")
             os.kill(os.getpid(), signal.SIGSTOP)
     if option in ["N", "O"]:
-        os.remove(other_file)
+        remove(args, other_file)
     if option in ["Y", "I"]:
-        shutil.copy2(other_file, conf_file)
-        os.remove(other_file)
+        copy(other_file, conf_file)
+        remove(args, other_file)
     if option == "M":
-        merge_conf_files(conf_file, other_file)
+        merge_conf_files(args, conf_file, other_file)
 
 
 def handle_rpmsave(conf_file, other_file):
     raise
 
-def handle_package(package):
+def handle_package(args, package):
     """ does the main work for each package
         package is rpmHdr object
     """
     for conf_file in get_list_of_config(package):
         if os.access(conf_file + ".rpmnew", os.F_OK):
-            handle_rpmnew(conf_file, conf_file + ".rpmsave")
+            handle_rpmnew(args, conf_file, conf_file + ".rpmsave")
         if os.access(conf_file + ".rpmsave", os.F_OK):
             handle_rpmsave(conf_file, conf_file + ".rpmsave")
         if os.access(conf_file + ".rpmorig", os.F_OK):
@@ -140,9 +152,11 @@ def handle_package(package):
 def clean_orphan_file(rpmnew_rpmsave):
     # rpmnew_rpmsave is lowercase name of rpmnew/rpmsave file
     (rpmnew_rpmsave_orig, _) = os.path.splitext(rpmnew_rpmsave)
-    package_merge = file_delete = None 
+    package_merge = file_delete = None
     try:
-        package_merge = subprocess.check_output(["/usr/bin/rpm", '-qf', rpmnew_rpmsave_orig, '--qf', '%{name}'], universal_newlines=True)
+        package_merge = subprocess.check_output(["/usr/bin/rpm", '-qf',
+            rpmnew_rpmsave_orig, '--qf', '%{name}'],
+            universal_newlines=True, stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         file_delete = rpmnew_rpmsave
     return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave], file_delete)
@@ -167,7 +181,7 @@ def clean_orphan(args):
     sys.stdout.write("\n")
     if FILES_MERGE:
         print("These files need merging - you may want to run 'rpmconf -a':")
-        for (package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave) in FILES_MERGE:
+        for (package_merge, _, rpmnew_rpmsave) in FILES_MERGE:
             print("{0}: {1}".format(package_merge.ljust(20), rpmnew_rpmsave))
         print("Skipping files above.\n")
     if FILES_DELETE:
@@ -176,13 +190,10 @@ def clean_orphan(args):
             print(file_delete)
         answer = None
         while answer not in ["Y", "N", ""]:
-            answer = input("Delete these files (Y/n): ").upper()
+            answer = flush_input("Delete these files (Y/n): ").upper()
         if answer in ["Y", ""]:
-            if args.debug:
-                print("rm {0}".format(" ".join(FILES_DELETE)))
-            else:
-                for file_delete in FILES_DELETE:
-                    os.unlink(file_delete)
+            for file_delete in FILES_DELETE:
+                remove(args, file_delete)
     else:
         print("No orphaned .rpmnew and .rpmsave files found.")
 
@@ -191,23 +202,23 @@ def clean_orphan(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--all', dest='all', action='store_true',
-                       help='Check configuration files of all packages.')
+        help='Check configuration files of all packages.')
     parser.add_argument('-c', '--clean', dest='clean', action='store_true',
-                       help='Find and delete orphaned .rpmnew and .rpmsave files.')
+        help='Find and delete orphaned .rpmnew and .rpmsave files.')
     parser.add_argument('-d', '--debug', dest='debug', action='store_true',
-                       help='Dry run. Just show which file will be deleted.')
+        help='Dry run. Just show which file will be deleted.')
     parser.add_argument('-D', '--diff', dest='diff', action='store_true',
-                       help='Non-interactive diff mode. Useful to audit configs. Use with -a or -o options.')
+        help='Non-interactive diff mode. Useful to audit configs. Use with -a or -o options.')
     parser.add_argument('-f', '--frontend', dest='frontend', action='store', metavar='EDITOR',
-                       help='Define which frontend should be used for merging. For list of valid types see man page.')
+        help='Define which frontend should be used for merging. For list of valid types see man page.')
     parser.add_argument('-o', '--owner', dest='owner', action='append', metavar='PACKAGE',
-                       help='Check only configuration files of given package.')
+        help='Check only configuration files of given package.')
     parser.add_argument('-V', '--version', dest='version', action='store_true',
-                       help='Display rpmconf version.')
+        help='Display rpmconf version.')
     parser.add_argument('-Z', dest='selinux', action='store_true',
-                       help='Display SELinux context of old and new file.')
+        help='Display SELinux context of old and new file.')
     args = parser.parse_args()
-    
+
     if args.version:
         print(subprocess.check_output(["/usr/bin/rpm", '-q', 'rpmconf']))
         sys.exit(0)
@@ -220,23 +231,20 @@ def main():
         MODE=""
     if args.selinux:
         SELINUX="--lcontext"
-    else:
-        SELINUX=""
-    
+
     packages = []
     ts = rpm.TransactionSet()
     if args.all:
         packages = [ ts.dbMatch() ]
     elif args.owner:
         for o in args.owner:
-            print(o)
             mi = ts.dbMatch('name', o)
             packages.append(mi)
-    
+
     for mi in packages:
         for package_hdr in mi:
-            handle_package(package_hdr)
-    
+            handle_package(args, package_hdr)
+
     if args.clean:
         clean_orphan(args)
 
