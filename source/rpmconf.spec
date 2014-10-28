@@ -31,7 +31,7 @@ Directory hierarchy for installation scripts, which are handled by rpmconf.
 docbook2man rpmconf.sgml
 
 %install
-install -D -m 755 rpmconf %{buildroot}%{_sbindir}/rpmconf
+install -D -m 755 rpmconf.py %{buildroot}%{_sbindir}/rpmconf
 install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
 
 mkdir %{buildroot}%{_datadir}/rpmconf
