@@ -23,8 +23,6 @@ import shutil
 import subprocess
 import sys
 
-SELINUX = None
-
 def flush_input(question):
     """ Flush stdin and then ask the question. """
     tcflush(sys.stdin, TCIOFLUSH)
@@ -62,6 +60,17 @@ def differ(file_name1, file_name2):
         return False
     except subprocess.CalledProcessError:
         return True
+
+def show_diff(file1, file2):
+    p1 = subprocess.Popen(['/usr/bin/diff', '-u', file1, file2], stdout=subprocess.PIPE)
+    p2 = subprocess.Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=subprocess.PIPE, universal_newlines=True)
+    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
+    output = p2.communicate()[0]
+    print(output)
+
+def show_cond_diff(file_ex, file1, file2):
+    if os.path.lexists(file_ex):
+        show_diff(file1, file2)
 
 def remove(args, conf_file):
     if args.debug:
@@ -102,6 +111,16 @@ def merge_conf_files(args, conf_file, other_file):
         sys.stderr.write("Error: {0} not found.\n")
         sys.exit(4)
 
+def ls_conf_file(args, conf_file, other_file):
+    print("Configuration file '{}'".format(conf_file))
+    if args.selinux:
+        print(subprocess.check_output(['/usr/bin/ls', '-ltrd', '--lcontext', 
+            conf_file, other_file],
+            universal_newlines=True))
+    else:
+        print(subprocess.check_output(['/usr/bin/ls', '-ltrd',
+            conf_file, other_file], universal_newlines=True))
+
 def handle_rpmnew(args, conf_file, other_file):
     if not differ(conf_file, other_file):
         remove(args, other_file)
@@ -120,11 +139,7 @@ def handle_rpmnew(args, conf_file, other_file):
 
     option = ""
     while (option not in ["Y", "I", "N", "O", "M", "S"]):
-        print("Configuration file '{}'".format(conf_file))
-        if SELINUX:
-            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', SELINUX, conf_file, other_file], universal_newlines=True))
-        else:
-            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', conf_file, other_file], universal_newlines=True))
+        ls_conf_file(args, conf_file, other_file)
         print(prompt)
         try:
             option = flush_input("Your choice: ").upper()
@@ -134,11 +149,7 @@ def handle_rpmnew(args, conf_file, other_file):
             option = "N"
 
         if option == "D":
-            p1 = subprocess.Popen(['/usr/bin/diff', '-u', conf_file, other_file], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=subprocess.PIPE, universal_newlines=True)
-            p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
-            output = p2.communicate()[0]
-            print(output)
+            show_diff(conf_file, other_file)
         if option == "Z":
             print("Run command 'fg' to continue")
             os.kill(os.getpid(), signal.SIGSTOP)
@@ -149,20 +160,65 @@ def handle_rpmnew(args, conf_file, other_file):
     if option == "M":
         merge_conf_files(args, conf_file, other_file)
 
-def handle_rpmsave(conf_file, other_file):
-    raise
+def handle_rpmsave(args, conf_file, other_file):
+    if not differ(conf_file, other_file):
+        remove(args, other_file)
+        return
+
+    prompt = """ ==> Package distributor has shipped an updated version.
+ ==> Maintainer forced upgrade. Your old version has been backed up.
+   What would you like to do about it?  Your options are:
+    Y or I  : install (keep) the package maintainer's version
+    N or O  : return back to your original file
+      D     : show the differences between the versions
+      M     : merge configuration files
+      Z     : background this process to examine the situation
+      S     : skip this file
+ The default action is to keep package maintainer's version.
+*** aliases (Y/I/N/O/D/Z/S) [default=Y] ? """
+
+    option = ""
+    while (option not in ["Y", "I", "N", "O", "M", "S"]):
+        ls_conf_file(args, conf_file, other_file)
+        print(prompt)
+        try:
+            option = flush_input("Your choice: ").upper()
+        except EOFError:
+            option = "S"
+        if not option:
+            option = "Y"
+
+        if option == "D":
+            show_diff(other_file, conf_file)
+        if option == "Z":
+            print("Run command 'fg' to continue")
+            os.kill(os.getpid(), signal.SIGSTOP)
+    if option in ["Y", "I"]:
+        remove(args, other_file)
+    if option in ["N", "O"]:
+        overwrite(args, other_file, conf_file)
+    if option == "M":
+        merge_conf_files(args, conf_file, other_file)
 
 def handle_package(args, package):
     """ does the main work for each package
         package is rpmHdr object
     """
     for conf_file in get_list_of_config(package):
-        if os.access(conf_file + ".rpmnew", os.F_OK):
-            handle_rpmnew(args, conf_file, conf_file + ".rpmnew")
-        if os.access(conf_file + ".rpmsave", os.F_OK):
-            handle_rpmsave(conf_file, conf_file + ".rpmsave")
-        if os.access(conf_file + ".rpmorig", os.F_OK):
-            handle_rpmsave(conf_file, conf_file + ".rpmorig")
+        if args.diff:
+            conf_rpmnew = "{0}.rpmnew".format(conf_file)
+            conf_rpmsave = "{0}.rpmsave".format(conf_file)
+            conf_rpmorig = "{0}.rpmorig".format(conf_file)
+            show_cond_diff(conf_rpmnew, conf_file, conf_rpmnew)
+            show_cond_diff(conf_rpmsave, conf_rpmsave, conf_file)
+            show_cond_diff(conf_rpmorig, conf_rpmorig, conf_file)
+        else:
+            if os.access(conf_file + ".rpmnew", os.F_OK):
+                handle_rpmnew(args, conf_file, conf_file + ".rpmnew")
+            if os.access(conf_file + ".rpmsave", os.F_OK):
+                handle_rpmsave(args, conf_file, conf_file + ".rpmsave")
+            if os.access(conf_file + ".rpmorig", os.F_OK):
+                handle_rpmsave(args, conf_file, conf_file + ".rpmorig")
 
 def clean_orphan_file(rpmnew_rpmsave):
     # rpmnew_rpmsave is lowercase name of rpmnew/rpmsave file
@@ -240,12 +296,6 @@ def main():
     if not (args.owner or args.all or args.clean):
         print(parser.print_usage())
         sys.exit(1)
-    if args.diff:
-        MODE="diff"
-    else:
-        MODE=""
-    if args.selinux:
-        SELINUX="--lcontext"
 
     packages = []
     ts = rpm.TransactionSet()
