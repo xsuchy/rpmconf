@@ -6,7 +6,6 @@ Version: 0.3.7
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
-BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch: noarch
 BuildRequires: docbook-utils
 BuildRequires: docbook-dtd31-sgml
@@ -32,17 +31,12 @@ Directory hierarchy for installation scripts, which are handled by rpmconf.
 docbook2man rpmconf.sgml
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -D -m 755 rpmconf %{buildroot}%{_sbindir}/rpmconf
 install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
 
 mkdir %{buildroot}%{_datadir}/rpmconf
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %{_sbindir}/rpmconf
 %{_mandir}/man8/rpmconf.8*
 %doc LICENSE
