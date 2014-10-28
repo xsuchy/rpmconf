@@ -72,25 +72,35 @@ def remove(args, conf_file):
 def merge_conf_files(args, conf_file, other_file):
     # vimdiff, gvimdiff, meld return 0 even if file was not saved
     # we may handle it some way. check last modification? ask user?
-    if args.frontend == 'vimdiff':
-        subprocess.check_call(['/usr/bin/vimdiff', conf_file, other_file])
-        remove(args, other_file)
-    elif args.frontend == 'gvimdiff':
-        subprocess.check_call(['/usr/bin/gvimdiff', conf_file, other_file])
-        remove(args, other_file)
-    elif args.frontend == 'diffuse':
-        subprocess.check_call(['/usr/bin/diffuse', conf_file, other_file])
-        remove(args, other_file)
-    elif args.frontend == 'kdiff3':
-        subprocess.check_call(['/usr/bin/kdiff3', conf_file, other_file, '-o', conf_file])
-        remove(args, other_file)
-        remove(args, conf_file+".orig")
-    elif args.frontend == 'meld':
-        subprocess.check_call(['/usr/bin/meld', conf_file, other_file])
-        remove(args, other_file)
-    else:
-        sys.stderr.write("Error: you did not selected any frontend for merge.")
-        sys.exit(2)
+    try:
+        if args.frontend == 'vimdiff':
+            subprocess.check_call(['/usr/bin/vimdiff', conf_file, other_file])
+            remove(args, other_file)
+        elif args.frontend == 'gvimdiff':
+            subprocess.check_call(['/usr/bin/gvimdiff', conf_file, other_file])
+            remove(args, other_file)
+        elif args.frontend == 'diffuse':
+            try:
+                subprocess.check_call(['/usr/bin/diffuse', conf_file, other_file])
+                remove(args, other_file)
+            except subprocess.CalledProcessError:
+                print("Files not merged.")
+        elif args.frontend == 'kdiff3':
+            try:
+                subprocess.check_call(['/usr/bin/kdiff3', conf_file, other_file, '-o', conf_file])
+                remove(args, other_file)
+                remove(args, conf_file+".orig")
+            except subprocess.CalledProcessError:
+                print("Files not merged.")
+        elif args.frontend == 'meld':
+            subprocess.check_call(['/usr/bin/meld', conf_file, other_file])
+            remove(args, other_file)
+        else:
+            sys.stderr.write("Error: you did not selected any frontend for merge.\n")
+            sys.exit(2)
+    except FileNotFoundError:
+        sys.stderr.write("Error: {0} not found.\n")
+        sys.exit(4)
 
 def handle_rpmnew(args, conf_file, other_file):
     if not differ(conf_file, other_file):
@@ -138,7 +148,6 @@ def handle_rpmnew(args, conf_file, other_file):
         overwrite(args, other_file, conf_file)
     if option == "M":
         merge_conf_files(args, conf_file, other_file)
-
 
 def handle_rpmsave(conf_file, other_file):
     raise
