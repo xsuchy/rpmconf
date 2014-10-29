@@ -2,8 +2,8 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 1.0.0
-Release: 0%{?dist}
+Version: 1.0.1
+Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
 BuildArch: noarch
@@ -45,6 +45,10 @@ mkdir %{buildroot}%{_datadir}/rpmconf
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Wed Oct 29 2014 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- migrate to python3
+- handle symlinks correctly
+
 * Thu Oct 02 2014 Miroslav Suchý 0.3.7-1
 - when there is no error return 0
 
