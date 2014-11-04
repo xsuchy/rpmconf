@@ -10,6 +10,7 @@ BuildArch: noarch
 BuildRequires: docbook-utils
 BuildRequires: docbook-dtd31-sgml
 Requires: %{name}-base
+Requires: rpm-python3
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
