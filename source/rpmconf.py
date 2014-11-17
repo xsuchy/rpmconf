@@ -16,6 +16,7 @@ from termios import tcflush, TCIOFLUSH
 
 import argparse
 import os
+import errno
 import re
 import rpm
 import signal
@@ -32,7 +33,12 @@ def copy(src, dst):
     """ Copy src to dst."""
     if os.path.islink(src):
         linkto = os.readlink(src)
-        os.symlink(linkto, dst)
+        try:
+            os.symlink(linkto, dst)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                os.remove(dst)
+                os.symlink(linkto, dst)
     else:
         shutil.copy2(src, dst)
 
