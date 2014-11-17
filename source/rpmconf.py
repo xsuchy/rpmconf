@@ -22,6 +22,8 @@ import signal
 import shutil
 import subprocess
 import sys
+import difflib
+import time
 
 def flush_input(question):
     """ Flush stdin and then ask the question. """
@@ -55,18 +57,23 @@ def get_list_of_config(package):
 
 def differ(file_name1, file_name2):
     """ returns True if files differ """
-    try:
-        subprocess.check_call(['/usr/bin/diff', '-q', file_name1, file_name2])
+    fromlines = open(file1, 'U').readlines()
+    tolines = open(file2, 'U').readlines()
+    if len(list(difflib.unified_diff(fromlines, tolines))) == 0:
         return False
-    except subprocess.CalledProcessError:
+    else:
         return True
 
 def show_diff(file1, file2):
-    p1 = subprocess.Popen(['/usr/bin/diff', '-u', file1, file2], stdout=subprocess.PIPE)
-    p2 = subprocess.Popen(["/usr/bin/less"], stdin=p1.stdout, stdout=subprocess.PIPE, universal_newlines=True)
-    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
-    output = p2.communicate()[0]
-    print(output)
+    fromdate = time.ctime(os.stat(file1).st_mtime)
+    todate = time.ctime(os.stat(file2).st_mtime)
+    fromlines = open(file1, 'U').readlines()
+    tolines = open(file2, 'U').readlines()
+    diff = difflib.unified_diff(fromlines, tolines, file1, file2, fromdate, todate)
+    less = subprocess.Popen(["/usr/bin/less"], stdin=subprocess.PIPE)
+    less.stdin.writelines(diff)
+    less.stdin.close()
+    less.wait()
 
 def show_cond_diff(file_ex, file1, file2):
     if os.path.lexists(file_ex):
