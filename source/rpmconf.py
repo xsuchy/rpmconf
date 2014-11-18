@@ -58,16 +58,28 @@ def get_list_of_config(package):
 
 def differ(file_name1, file_name2):
     """ returns True if files differ """
-    fromlines = open(file_name1, 'U').readlines()
-    tolines = open(file_name2, 'U').readlines()
-    return not(list(difflib.unified_diff(fromlines, tolines)) == [])
+    try:
+        fromlines = open(file_name1, 'U').readlines()
+        tolines = open(file_name2, 'U').readlines()
+        return not(list(difflib.unified_diff(fromlines, tolines)) == [])
+    except UnicodeDecodeError:
+        # binary files
+        try:
+            subprocess.check_call(['/usr/bin/diff', '-q', file_name1, file_name2])
+        except subprocess.CalledProcessError:
+            return True
 
 def show_diff(file1, file2):
     fromdate = time.ctime(os.stat(file1).st_mtime)
     todate = time.ctime(os.stat(file2).st_mtime)
-    fromlines = open(file1, 'U').readlines()
-    tolines = open(file2, 'U').readlines()
-    diff = difflib.unified_diff(fromlines, tolines, file1, file2, fromdate, todate)
+    try:
+        fromlines = open(file1, 'U').readlines()
+        tolines = open(file2, 'U').readlines()
+        diff = difflib.unified_diff(fromlines, tolines, file1, file2, fromdate, todate)
+    except UnicodeDecodeError:
+        # binary files
+        p1 = subprocess.Popen(['/usr/bin/diff', '-u', file1, file2], stdout=subprocess.PIPE, universal_newlines=True)
+        diff = p1.communicate()[0]
     pydoc.pager(''.join(diff))
 
 def show_cond_diff(file_ex, file1, file2):
