@@ -68,7 +68,7 @@ def show_diff(file1, file2):
     fromlines = open(file1, 'U').readlines()
     tolines = open(file2, 'U').readlines()
     diff = difflib.unified_diff(fromlines, tolines, file1, file2, fromdate, todate)
-    pydoc.pager(diff)
+    pydoc.pager(''.join(diff))
 
 def show_cond_diff(file_ex, file1, file2):
     if os.path.lexists(file_ex):
