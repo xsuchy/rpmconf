@@ -15,14 +15,15 @@
 from termios import tcflush, TCIOFLUSH
 
 import argparse
+import difflib
 import os
+import pydoc
 import re
 import rpm
-import signal
 import shutil
+import signal
 import subprocess
 import sys
-import difflib
 import time
 
 def flush_input(question):
@@ -70,10 +71,7 @@ def show_diff(file1, file2):
     fromlines = open(file1, 'U').readlines()
     tolines = open(file2, 'U').readlines()
     diff = difflib.unified_diff(fromlines, tolines, file1, file2, fromdate, todate)
-    less = subprocess.Popen(["/usr/bin/less"], stdin=subprocess.PIPE)
-    less.stdin.writelines(diff)
-    less.stdin.close()
-    less.wait()
+    pydoc.pager(diff)
 
 def show_cond_diff(file_ex, file1, file2):
     if os.path.lexists(file_ex):
