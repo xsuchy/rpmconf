@@ -60,10 +60,7 @@ def differ(file_name1, file_name2):
     """ returns True if files differ """
     fromlines = open(file_name1, 'U').readlines()
     tolines = open(file_name2, 'U').readlines()
-    if len(list(difflib.unified_diff(fromlines, tolines))) == 0:
-        return False
-    else:
-        return True
+    return not(list(difflib.unified_diff(fromlines, tolines)) == [])
 
 def show_diff(file1, file2):
     fromdate = time.ctime(os.stat(file1).st_mtime)
