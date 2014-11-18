@@ -48,12 +48,11 @@ def overwrite(args, src, dst):
 
 def get_list_of_config(package):
     """ return list of config files for give package """
-    result = subprocess.check_output(["/usr/bin/rpm", '-qc', package['name']], universal_newlines=True)
-    # if package contains no files rpm will print localized "(contains no files)"
-    if re.match( r'^(.*)$', result):
-        result = []
-    else:
-        result = result.rstrip().split('\n')
+    fi = rpm.fi(package)
+    result = []
+    for f in fi:
+        if f[4] & rpm.RPMFILE_CONFIG:
+            result.append(f[0])
     return result
 
 def differ(file_name1, file_name2):
