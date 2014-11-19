@@ -318,7 +318,7 @@ def main():
     packages = []
     ts = rpm.TransactionSet()
     if args.all:
-        packages = [ ts.dbMatch() ]
+        packages = [ts.dbMatch()]
     elif args.owner:
         for o in args.owner:
             mi = ts.dbMatch('name', o)
