@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # vim: noai:ts=4:sw=4:expandtab
+# pylint: disable=bad-continuation, line-too-long, invalid-name, missing-docstring
 
 # This software is licensed to you under the GNU General Public License,
 # version 3 (GPLv3). There is NO WARRANTY for this software, express or
@@ -25,7 +26,6 @@ import subprocess
 import sys
 import time
 
-# pylint: disable=bad-continuation, line-too-long, invalid-name, missing-docstring
 
 def flush_input(question):
     """ Flush stdin and then ask the question. """
