@@ -130,7 +130,7 @@ def merge_conf_files(args, conf_file, other_file):
 def ls_conf_file(args, conf_file, other_file):
     print("Configuration file '{}'".format(conf_file))
     if args.selinux:
-        print(subprocess.check_output(['/usr/bin/ls', '-ltrd', '--lcontext', 
+        print(subprocess.check_output(['/usr/bin/ls', '-ltrd', '--lcontext',
             conf_file, other_file],
             universal_newlines=True))
     else:
