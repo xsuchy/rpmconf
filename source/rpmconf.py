@@ -16,10 +16,8 @@ from termios import tcflush, TCIOFLUSH
 
 import argparse
 import difflib
-import errno
 import os
 import pydoc
-import re
 import rpm
 import shutil
 import signal
