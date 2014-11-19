@@ -9,6 +9,7 @@ Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar
 BuildArch: noarch
 BuildRequires: docbook-utils
 BuildRequires: docbook-dtd31-sgml
+BuildRequires: python3-pylint
 Requires: %{name}-base
 Requires: rpm-python3
 
@@ -36,6 +37,9 @@ install -D -m 755 rpmconf.py %{buildroot}%{_sbindir}/rpmconf
 install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
 
 mkdir %{buildroot}%{_datadir}/rpmconf
+
+%check
+python3-pylint %{buildroot}%{_sbindir}/rpmconf
 
 %files
 %{_sbindir}/rpmconf
