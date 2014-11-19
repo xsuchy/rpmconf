@@ -317,13 +317,14 @@ def main():
 
     packages = []
     ts = rpm.TransactionSet()
+    # pylint: disable=no-member
     if args.all:
         packages = [ts.dbMatch()]
     elif args.owner:
         for o in args.owner:
             mi = ts.dbMatch('name', o)
             packages.append(mi)
-
+    # pylint: enable=no-member
     for mi in packages:
         for package_hdr in mi:
             handle_package(args, package_hdr)
