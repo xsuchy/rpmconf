@@ -16,6 +16,7 @@ from termios import tcflush, TCIOFLUSH
 
 import argparse
 import difflib
+import errno
 import os
 import pydoc
 import re
@@ -35,7 +36,11 @@ def copy(src, dst):
     """ Copy src to dst."""
     if os.path.islink(src):
         linkto = os.readlink(src)
-        os.symlink(linkto, dst)
+        try:
+            os.symlink(linkto, dst)
+        except FileExistsError:
+            os.unlink(dst)
+            os.symlink(linkto, dst)
     else:
         shutil.copy2(src, dst)
 
