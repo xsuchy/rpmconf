@@ -65,7 +65,7 @@ def differ(file_name1, file_name2):
     try:
         fromlines = open(file_name1, 'U').readlines()
         tolines = open(file_name2, 'U').readlines()
-        return not(list(difflib.unified_diff(fromlines, tolines)) == [])
+        return not list(difflib.unified_diff(fromlines, tolines)) == []
     except UnicodeDecodeError:
         # binary files
         try:
