@@ -258,7 +258,9 @@ def clean_orphan(args):
         sys.stdout.write(topdir + " ")
         sys.stdout.flush()
         for root, dirs, files in os.walk(topdir, followlinks=True):
-            # TODO - skip /var/lib/mock/
+            if root == "/var/lib":
+                # skip /var/lib/mock
+                dirs[:] = [d for d in dirs if d != 'mock']
             for name in files:
                 l_name = os.path.join(root, name)
                 if os.path.splitext(l_name)[1] in ['.rpmnew', '.rpmsave']:
