@@ -25,6 +25,8 @@ import subprocess
 import sys
 import time
 
+# pylint: disable=bad-continuation, line-too-long, invalid-name, missing-docstring
+
 def flush_input(question):
     """ Flush stdin and then ask the question. """
     tcflush(sys.stdin, TCIOFLUSH)
