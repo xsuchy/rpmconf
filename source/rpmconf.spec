@@ -39,7 +39,7 @@ install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
 mkdir %{buildroot}%{_datadir}/rpmconf
 
 %check
-python3-pylint %{buildroot}%{_sbindir}/rpmconf
+python3-pylint --reports=n %{buildroot}%{_sbindir}/rpmconf
 
 %files
 %{_sbindir}/rpmconf
