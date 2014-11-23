@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 1.0.2
+Version: 1.0.3
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -50,6 +50,16 @@ python3-pylint --reports=n %{buildroot}%{_sbindir}/rpmconf
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Sun Nov 23 2014 Miroslav Suchý <miroslav@suchy.cz> 1.0.3-1
+- Allow specification of a custom merge type via an environment variable,
+  $MERGE
+- do not remove files on those merge tools, which does not return correct exit
+  code
+- make pylint run mandatory
+- skip /var/lib/mock when --clean
+- use rpm bindings to find configfiles
+- use filecmp instead of subprocessed diff
+
 * Tue Nov 04 2014 Miroslav Suchý <msuchy@redhat.com> 1.0.2-1
 - require rpm-python3
 
