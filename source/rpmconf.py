@@ -106,11 +106,15 @@ def merge_conf_files(args, conf_file, other_file):
                 print("Files not merged.")
         elif args.frontend == 'meld':
             subprocess.check_call(['/usr/bin/meld', conf_file, other_file])
+        elif (args.frontend == 'env' or args.frontend is None) and os.environ.get('MERGE') is not None:
+            merge_tool = os.environ.get('MERGE')
+            print(repr(merge_tool))
+            subprocess.check_call([merge_tool, conf_file, other_file])
         else:
             sys.stderr.write("Error: you did not selected any frontend for merge.\n")
             sys.exit(2)
-    except FileNotFoundError:
-        sys.stderr.write("Error: {0} not found.\n")
+    except FileNotFoundError as e:
+        sys.stderr.write("{0}\n".format(e.strerror))
         sys.exit(4)
 
 def ls_conf_file(args, conf_file, other_file):
@@ -137,10 +141,10 @@ def handle_rpmnew(args, conf_file, other_file):
       Z     : background this process to examine the situation
       S     : skip this file
  The default action is to keep your current version.
-*** aliases (Y/I/N/O/D/Z/S) [default=N] ? """
+*** aliases (Y/I/N/O/D/M/Z/S) [default=N] ? """
 
     option = ""
-    while (option not in ["Y", "I", "N", "O", "M", "S"]):
+    while (option not in ["Y", "I", "N", "O", "S"]):
         ls_conf_file(args, conf_file, other_file)
         print(prompt)
         try:
@@ -149,18 +153,17 @@ def handle_rpmnew(args, conf_file, other_file):
             option = "S"
         if not option:
             option = "N"
-
         if option == "D":
             show_diff(conf_file, other_file)
         if option == "Z":
             print("Run command 'fg' to continue")
             os.kill(os.getpid(), signal.SIGSTOP)
+        if option == "M":
+            merge_conf_files(args, conf_file, other_file)
     if option in ["N", "O"]:
         remove(args, other_file)
     if option in ["Y", "I"]:
         overwrite(args, other_file, conf_file)
-    if option == "M":
-        merge_conf_files(args, conf_file, other_file)
 
 def handle_rpmsave(args, conf_file, other_file):
     if cmp(conf_file, other_file):
@@ -177,10 +180,10 @@ def handle_rpmsave(args, conf_file, other_file):
       Z     : background this process to examine the situation
       S     : skip this file
  The default action is to keep package maintainer's version.
-*** aliases (Y/I/N/O/D/Z/S) [default=Y] ? """
+*** aliases (Y/I/N/O/M/D/Z/S) [default=Y] ? """
 
     option = ""
-    while (option not in ["Y", "I", "N", "O", "M", "S"]):
+    while (option not in ["Y", "I", "N", "O", "S"]):
         ls_conf_file(args, conf_file, other_file)
         print(prompt)
         try:
@@ -189,18 +192,17 @@ def handle_rpmsave(args, conf_file, other_file):
             option = "S"
         if not option:
             option = "Y"
-
         if option == "D":
             show_diff(other_file, conf_file)
         if option == "Z":
             print("Run command 'fg' to continue")
             os.kill(os.getpid(), signal.SIGSTOP)
+        if option == "M":
+            merge_conf_files(args, conf_file, other_file)
     if option in ["Y", "I"]:
         remove(args, other_file)
     if option in ["N", "O"]:
         overwrite(args, other_file, conf_file)
-    if option == "M":
-        merge_conf_files(args, conf_file, other_file)
 
 def handle_package(args, package):
     """ does the main work for each package
