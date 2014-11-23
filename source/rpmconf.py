@@ -90,14 +90,11 @@ def merge_conf_files(args, conf_file, other_file):
     try:
         if args.frontend == 'vimdiff':
             subprocess.check_call(['/usr/bin/vimdiff', conf_file, other_file])
-            remove(args, other_file)
         elif args.frontend == 'gvimdiff':
             subprocess.check_call(['/usr/bin/gvimdiff', conf_file, other_file])
-            remove(args, other_file)
         elif args.frontend == 'diffuse':
             try:
                 subprocess.check_call(['/usr/bin/diffuse', conf_file, other_file])
-                remove(args, other_file)
             except subprocess.CalledProcessError:
                 print("Files not merged.")
         elif args.frontend == 'kdiff3':
@@ -109,7 +106,6 @@ def merge_conf_files(args, conf_file, other_file):
                 print("Files not merged.")
         elif args.frontend == 'meld':
             subprocess.check_call(['/usr/bin/meld', conf_file, other_file])
-            remove(args, other_file)
         else:
             sys.stderr.write("Error: you did not selected any frontend for merge.\n")
             sys.exit(2)
