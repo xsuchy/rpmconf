@@ -12,6 +12,8 @@ BuildRequires: docbook-dtd31-sgml
 BuildRequires: python3-pylint
 Requires: %{name}-base
 Requires: rpm-python3
+# just because of pylint
+BuildRequires: rpm-python3
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
