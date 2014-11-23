@@ -2,7 +2,7 @@ Name: rpmconf
 Summary: Tool to handle rpmnew and rpmsave files
 Group:   Applications/System
 License: GPLv3
-Version: 1.0.3
+Version: 1.0.4
 Release: 1%{?dist}
 URL:     http://wiki.github.com/xsuchy/rpmconf
 Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
@@ -52,6 +52,9 @@ python3-pylint --reports=n %{buildroot}%{_sbindir}/rpmconf
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Sun Nov 23 2014 Miroslav Suchý <msuchy@redhat.com> 1.0.4-1
+- add BR rpm-python3
+
 * Sun Nov 23 2014 Miroslav Suchý <miroslav@suchy.cz> 1.0.3-1
 - Allow specification of a custom merge type via an environment variable,
   $MERGE
