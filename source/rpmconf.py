@@ -17,6 +17,7 @@ from termios import tcflush, TCIOFLUSH
 
 import argparse
 import difflib
+from filecmp import cmp
 import os
 import pydoc
 import rpm
@@ -59,19 +60,6 @@ def get_list_of_config(package):
         if f[4] & rpm.RPMFILE_CONFIG:
             result.append(f[0])
     return result
-
-def differ(file_name1, file_name2):
-    """ returns True if files differ """
-    try:
-        fromlines = open(file_name1, 'U').readlines()
-        tolines = open(file_name2, 'U').readlines()
-        return not list(difflib.unified_diff(fromlines, tolines)) == []
-    except UnicodeDecodeError:
-        # binary files
-        try:
-            subprocess.check_call(['/usr/bin/diff', '-q', file_name1, file_name2])
-        except subprocess.CalledProcessError:
-            return True
 
 def show_diff(file1, file2):
     fromdate = time.ctime(os.stat(file1).st_mtime)
@@ -140,7 +128,7 @@ def ls_conf_file(args, conf_file, other_file):
             conf_file, other_file], universal_newlines=True))
 
 def handle_rpmnew(args, conf_file, other_file):
-    if not differ(conf_file, other_file):
+    if cmp(conf_file, other_file):
         remove(args, other_file)
         return
 
@@ -179,7 +167,7 @@ def handle_rpmnew(args, conf_file, other_file):
         merge_conf_files(args, conf_file, other_file)
 
 def handle_rpmsave(args, conf_file, other_file):
-    if not differ(conf_file, other_file):
+    if cmp(conf_file, other_file):
         remove(args, other_file)
         return
 
