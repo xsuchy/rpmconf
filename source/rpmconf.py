@@ -297,7 +297,11 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        print(subprocess.check_output(["/usr/bin/rpm", '-q', 'rpmconf']))
+        ts = rpm.TransactionSet()
+        # pylint: disable=no-member
+        mi = ts.dbMatch('name', "rpmconf")
+        for h in mi:
+            print(h.NEVR.decode("utf-8"))
         sys.exit(0)
     if not (args.owner or args.all or args.clean):
         print(parser.print_usage())
@@ -305,7 +309,7 @@ def main():
 
     packages = []
     ts = rpm.TransactionSet()
-    # pylint: disable=no-member
+    # pylint: disable=maybe-no-member
     if args.all:
         packages = [ts.dbMatch()]
     elif args.owner:
