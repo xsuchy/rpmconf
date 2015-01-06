@@ -7,3 +7,5 @@ we may handle it some way. check last modification? ask user?
 
 some files are not marked as configuration file (see bash-completation)
 we should somehow try to find them too (optionaly of course)
+
+make CLI docs via sphinx

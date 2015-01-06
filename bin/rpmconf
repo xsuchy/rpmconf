@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+#
+# vim: noai:ts=4:sw=4:expandtab
+#
+# Copyright (C) 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import argparse
+from rpmconf import rpmconf
+import sys
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--all", dest="all", action="store_true",
+                        help="Check configuration files of all packages.")
+    parser.add_argument("-c", "--clean", dest="clean", action="store_true",
+                        help="Find and delete orphaned"
+                             " .rpmnew and .rpmsave files.")
+    parser.add_argument("-d", "--debug", dest="debug", action="store_true",
+                        help="Dry run. Just show which file will be deleted.")
+    parser.add_argument("-D", "--diff", dest="diff", action="store_true",
+                        help="Non-interactive diff mode. "
+                             "Useful to audit configs. "
+                             "Use with -a or -o options.")
+    parser.add_argument("-f", "--frontend", dest="frontend", action="store",
+                        metavar="EDITOR",
+                        help="Define which frontend should be used for merging. "
+                             "For list of valid types see man page.")
+    parser.add_argument("-Z", dest="selinux", action="store_true",
+                        help="Display SELinux context of old and new file.")
+    parser.add_argument("-o", "--owner", dest="owner", metavar="PACKAGE",
+                        nargs="*",
+                        help="Check only configuration files of given package.")
+    parser.add_argument("-v", "--version", dest="version", action="store_true",
+                        help="Display rpmconf version.")
+    args = parser.parse_args()
+    if args.version:
+        print(rpmconf.__version__)
+        sys.exit(0)
+    if not (args.owner or args.all or args.clean):
+        parser.print_help()
+        sys.exit(1)
+    rconf = rpmconf.RpmConf(packages=None if args.all else args.owner,
+                            clean=args.clean, debug=args.debug,
+                            diff=args.diff, frontend=args.frontend,
+                            selinux=args.selinux)
+    rconf.run()
+
+if __name__ == "__main__":
+    main()
