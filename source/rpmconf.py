@@ -28,6 +28,8 @@ import sys
 import time
 
 
+__version__ = "0.1.5"
+
 def flush_input(question):
     """ Flush stdin and then ask the question. """
     tcflush(sys.stdin, TCIOFLUSH)
@@ -297,7 +299,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        print(subprocess.check_output(["/usr/bin/rpm", '-q', 'rpmconf']))
+        print(__version__)
         sys.exit(0)
     if not (args.owner or args.all or args.clean):
         print(parser.print_usage())
