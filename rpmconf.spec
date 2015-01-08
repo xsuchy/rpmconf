@@ -55,12 +55,13 @@ mkdir -p %{buildroot}%{_datadir}/rpmconf/
 python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 
 %files
-%doc LICENSE
+%license LICENSE
 %{_sbindir}/rpmconf
 %{_mandir}/man8/rpmconf.8*
 
 %files -n python3-rpmconf
-%doc LICENSE docs/build/html/
+%license LICENSE
+%doc docs/build/html/
 %{python3_sitelib}/rpmconf/
 %{python3_sitelib}/rpmconf-*.egg-info
 %{_mandir}/man3/rpmconf.3*
