@@ -1,57 +1,68 @@
-Name: rpmconf
-Summary: Tool to handle rpmnew and rpmsave files
-Group:   Applications/System
-License: GPLv3
-Version: 1.0.4
-Release: 1%{?dist}
-URL:     http://wiki.github.com/xsuchy/rpmconf
-Source0: http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
-BuildArch: noarch
-BuildRequires: docbook-utils
-BuildRequires: docbook-dtd31-sgml
-BuildRequires: python3-pylint
-Requires: %{name}-base
-Requires: rpm-python3
-# just because of pylint
-BuildRequires: rpm-python3
+Name:           rpmconf
+Summary:        Tool to handle rpmnew and rpmsave files
+License:        GPLv3
+Version:        1.0.90
+Release:        1%{?dist}
+URL:            http://wiki.github.com/xsuchy/rpmconf
+Source0:        http://cloud.github.com/downloads/xsuchy/rpmconf/%{name}-%{version}.tar.gz
+BuildArch:      noarch
+BuildRequires:  docbook-utils
+BuildRequires:  docbook-dtd31-sgml
+BuildRequires:  python3-sphinx
+BuildRequires:  python3-pylint
+BuildRequires:  python3-devel
+Requires:       python3-rpmconf
+Requires:       rpm-python3
+BuildRequires:  rpm-python3
+Obsoletes:      %{name}-base <= %{version}-%{release}
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
 with them:
 Keep current version, place back old version, watch the diff or merge.
 
-%package base
-Summary: Filesystem for %{name}
-Group: Applications/System
-BuildArch: noarch
+%package -n python3-rpmconf
+Summary:        Python interface for %{name}
+BuildArch:      noarch
 
-%description base
-Directory hierarchy for installation scripts, which are handled by rpmconf.
+%description -n python3-rpmconf
+Python interface for %{name}. Mostly useful for developers only.
 
 %prep
 %setup -q
 
 %build
+%{__python3} setup.py build
 docbook2man rpmconf.sgml
+make -C docs html man
 
 %install
-install -D -m 755 rpmconf.py %{buildroot}%{_sbindir}/rpmconf
+%{__python3} setup.py install --skip-build \
+    --install-scripts %{_sbindir} \
+    --root %{buildroot}
 install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
-
-mkdir %{buildroot}%{_datadir}/rpmconf
+install -D -m 644 docs/build/man/rpmconf.3 %{buildroot}%{_mandir}/man3/rpmconf.3
+mkdir -p %{buildroot}%{_datadir}/rpmconf/
 
 %check
-python3-pylint --reports=n %{buildroot}%{_sbindir}/rpmconf
+python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 
 %files
-%{_sbindir}/rpmconf
-%{_mandir}/man8/rpmconf.8*
 %doc LICENSE
+%{_sbindir}/rpmconf
+%{_datadir}/rpmconf/
+%{_mandir}/man8/rpmconf.8*
 
-%files base
-%dir %{_datadir}/rpmconf
+%files -n python3-rpmconf
+%doc LICENSE docs/build/html/
+%{python3_sitelib}/rpmconf/
+%{python3_sitelib}/rpmconf-*.egg-info
+%{_mandir}/man3/rpmconf.3*
 
 %changelog
+* Wed Jan 07 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 1.0.90-1
+- Split to python class and CLI
+
 * Sun Nov 23 2014 Miroslav Suchý <msuchy@redhat.com> 1.0.4-1
 - add BR rpm-python3
 

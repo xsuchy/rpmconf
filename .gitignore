@@ -1,0 +1,4 @@
+/build/
+/docs/build/
+/rpmconf/__pycache__/
+*.pyc
