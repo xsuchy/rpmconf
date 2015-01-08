@@ -16,12 +16,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+""" Main script which will end up in /usr/sbin/rpmconf """
 import argparse
 from rpmconf import rpmconf
 import sys
 
 def main():
+    """ Main entry point. """
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--all", dest="all", action="store_true",
                         help="Check configuration files of all packages.")
