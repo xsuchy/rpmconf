@@ -11,10 +11,10 @@ BuildRequires:  docbook-dtd31-sgml
 BuildRequires:  python3-sphinx
 BuildRequires:  python3-pylint
 BuildRequires:  python3-devel
+Requires:       %{name}-base
 Requires:       python3-rpmconf
 Requires:       rpm-python3
 BuildRequires:  rpm-python3
-Obsoletes:      %{name}-base <= %{version}-%{release}
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
@@ -27,6 +27,13 @@ BuildArch:      noarch
 
 %description -n python3-rpmconf
 Python interface for %{name}. Mostly useful for developers only.
+
+%package base
+Summary: Filesystem for %{name}
+BuildArch: noarch
+
+%description base
+Directory hierarchy for installation scripts, which are handled by rpmconf.
 
 %prep
 %setup -q
@@ -50,7 +57,6 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 %files
 %doc LICENSE
 %{_sbindir}/rpmconf
-%{_datadir}/rpmconf/
 %{_mandir}/man8/rpmconf.8*
 
 %files -n python3-rpmconf
@@ -58,6 +64,9 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 %{python3_sitelib}/rpmconf/
 %{python3_sitelib}/rpmconf-*.egg-info
 %{_mandir}/man3/rpmconf.3*
+
+%files base
+%dir %{_datadir}/rpmconf
 
 %changelog
 * Wed Jan 07 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 1.0.90-1
