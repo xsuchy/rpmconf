@@ -64,6 +64,7 @@
     The executable must be idempotent. I.e. you can execute it multiple times
     and additional run, must not change something. Ideally it will be
     Puppet/Chef/Ansible/CFengine manifest.
+</para>
 </RefSect1>
 
 <RefSect1><Title>Options</Title>
