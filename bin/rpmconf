@@ -36,8 +36,8 @@ def main():
                              "Use with -a or -o options.")
     parser.add_argument("-f", "--frontend", dest="frontend", action="store",
                         metavar="EDITOR",
-                        help="Define which frontend should be used for merging. "
-                             "For list of valid types see man page.")
+                        help="Define which frontend should be used for merging."
+                             " For list of valid types see man page.")
     parser.add_argument("-Z", dest="selinux", action="store_true",
                         help="Display SELinux context of old and new file.")
     parser.add_argument("-o", "--owner", dest="owner", metavar="PACKAGE",
