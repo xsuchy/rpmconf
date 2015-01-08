@@ -90,9 +90,6 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 - Split to python class and CLI
 - use rpm python api to get version
 
-* Wed Jan 07 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 1.0.90-1
-- Split to python class and CLI
-
 * Sun Nov 23 2014 Miroslav Suchý <msuchy@redhat.com> 1.0.4-1
 - add BR rpm-python3
 
