@@ -52,6 +52,7 @@ install -D -m 644 docs/build/man/rpmconf.3 %{buildroot}%{_mandir}/man3/rpmconf.3
 mkdir -p %{buildroot}%{_datadir}/rpmconf/
 
 %check
+python3-pylint --reports=n %{buildroot}%{_sbindir}/rpmconf
 python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 
 %files
