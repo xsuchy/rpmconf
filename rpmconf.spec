@@ -28,6 +28,13 @@ BuildArch:      noarch
 %description -n python3-rpmconf
 Python interface for %{name}. Mostly useful for developers only.
 
+%package -n python3-rpmconf-doc
+Summary:        Documentation of python interface for %{name}
+BuildArch:      noarch
+
+%description -n python3-rpmconf-doc
+Documentation generated from code of python3-rpmconf.
+
 %package base
 Summary: Filesystem for %{name}
 BuildArch: noarch
@@ -62,10 +69,13 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 
 %files -n python3-rpmconf
 %license LICENSE
-%doc docs/build/html/
 %{python3_sitelib}/rpmconf/
 %{python3_sitelib}/rpmconf-*.egg-info
 %{_mandir}/man3/rpmconf.3*
+
+%files -n python3-rpmconf-doc
+%license LICENSE
+%doc docs/build/html/
 
 %files base
 %dir %{_datadir}/rpmconf
