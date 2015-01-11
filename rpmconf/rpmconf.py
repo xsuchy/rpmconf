@@ -139,7 +139,7 @@ class RpmConf(object):
                                         fromdate, todate)
         except UnicodeDecodeError:
             # binary files
-            diff_out = subprocess.Popen(["usr/bin/diff", "-u", file1, file2],
+            diff_out = subprocess.Popen(["/usr/bin/diff", "-u", file1, file2],
                                         stdout=subprocess.PIPE,
                                         universal_newlines=True)
             diff = diff_out.communicate()[0]
