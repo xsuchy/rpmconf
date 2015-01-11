@@ -340,13 +340,13 @@ class RpmConf(object):
         # rpmnew_rpmsave is lowercase name of rpmnew/rpmsave file
         (rpmnew_rpmsave_orig, _) = os.path.splitext(rpmnew_rpmsave)
         package_merge = file_delete = None
-        try:
-            package_merge = subprocess.check_output(
-                ["/usr/bin/rpm", '-qf',
-                 rpmnew_rpmsave_orig, '--qf', '%{name}'],
-                universal_newlines=True, stderr=subprocess.DEVNULL)
-        except subprocess.CalledProcessError:
+        trans = rpm.TransactionSet()
+        # pylint: disable=no-member
+        tmp_db = trans.dbMatch("basenames", rpmnew_rpmsave_orig)
+        if len(tmp_db) == 0:
             file_delete = rpmnew_rpmsave
+        else:
+            package_merge = tmp_db[0].Name
         return ([package_merge, rpmnew_rpmsave_orig, rpmnew_rpmsave],
                 file_delete)
 
