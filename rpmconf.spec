@@ -7,7 +7,7 @@ URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
 # git clone https://github.com/xsuchy/rpmconf.git
 # cd rpmconf; tito build --tgz
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.xz
 BuildArch:      noarch
 BuildRequires:  docbook-utils
 BuildRequires:  docbook-dtd31-sgml
