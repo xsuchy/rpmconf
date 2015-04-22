@@ -12,12 +12,14 @@ BuildArch:      noarch
 BuildRequires:  docbook-utils
 BuildRequires:  docbook-dtd31-sgml
 BuildRequires:  python3-sphinx
-BuildRequires:  python3-pylint
 BuildRequires:  python3-devel
 Requires:       %{name}-base
 Requires:       python3-rpmconf
 Requires:       rpm-python3
 BuildRequires:  rpm-python3
+#check
+BuildRequires:  python3-pylint
+BuildRequires:  python3-six
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
