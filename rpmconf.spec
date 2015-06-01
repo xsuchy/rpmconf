@@ -1,7 +1,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -92,6 +92,10 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Mon Jun 01 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.9-1
+- pylint: let the logger expand params
+- use soft deps
+
 * Mon Jun 01 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.8-1
 - 1226591 - do not flush stdin, when it is not TTY
 - BR python3-six
