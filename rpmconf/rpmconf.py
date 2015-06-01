@@ -99,7 +99,8 @@ class RpmConf(object):
         :rtype: str
 
         """
-        tcflush(sys.stdin, TCIOFLUSH)
+        if os.isatty(sys.stdin.fileno()):
+            tcflush(sys.stdin, TCIOFLUSH)
         return input(question)
 
     @staticmethod
