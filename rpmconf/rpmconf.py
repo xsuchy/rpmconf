@@ -355,7 +355,7 @@ class RpmConf(object):
         files_merge = []
         files_delete = []
         for topdir in ["/etc", "/var", "/usr"]:
-            self.logger.info("Seaching through: {}".format(topdir))
+            self.logger.info("Seaching through: %s", topdir)
             for root, dirs, files in os.walk(topdir, followlinks=True):
                 if root == "/var/lib":
                     # skip /var/lib/mock
