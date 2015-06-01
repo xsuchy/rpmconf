@@ -20,6 +20,12 @@ BuildRequires:  rpm-python3
 #check
 BuildRequires:  python3-pylint
 BuildRequires:  python3-six
+# mergetools
+Suggests: diffuse 
+Suggests: kdiff3
+Suggests: meld
+Suggests: vim-X11
+Suggests: vim-enhanced
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
