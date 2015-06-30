@@ -31,10 +31,12 @@ import pydoc
 import rpm
 import shutil
 import signal
+import select
 import subprocess
 import sys
-from termios import tcflush, TCIOFLUSH
+import termios
 import time
+import tty
 
 __version__ = "1.0.90"
 
@@ -100,7 +102,15 @@ class RpmConf(object):
 
         """
         if os.isatty(sys.stdin.fileno()):
-            tcflush(sys.stdin, TCIOFLUSH)
+            old_settings = termios.tcgetattr(sys.stdin)
+            try:
+                tty.setcbreak(sys.stdin.fileno(), termios.TCSANOW)
+                while select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                    sys.stdin.read(1)
+            finally:
+                termios.tcsetattr(sys.stdin, termios.TCSANOW, old_settings)
+        # BZ 1237075 workaround
+        signal.signal(signal.SIGINT, signal.default_int_handler)
         return input(question)
 
     @staticmethod
@@ -283,6 +293,8 @@ class RpmConf(object):
                 option = self.flush_input("Your choice: ").upper()
             except EOFError:
                 option = "S"
+            except KeyboardInterrupt:
+                sys.exit(1)
             if not option:
                 option = "N"
             if option == "D":
@@ -322,6 +334,8 @@ class RpmConf(object):
                 option = self.flush_input("Your choice: ").upper()
             except EOFError:
                 option = "S"
+            except KeyboardInterrupt:
+                sys.exit(1)
             if not option:
                 option = "Y"
             if option == "D":
