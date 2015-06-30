@@ -39,7 +39,8 @@ import time
 import tty
 
 __version__ = "1.0.90"
-
+#uncomment when rpm 4.13 is available
+#rpm.setInterruptSafety(False)
 
 class RpmConf(object):
     """
