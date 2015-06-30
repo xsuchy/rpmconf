@@ -126,7 +126,7 @@ class RpmConf(object):
         files = rpm.fi(package) # pylint: disable=no-member
         result = []
         for rpm_file in files:
-            if rpm_file[4] & rpm.RPMFILE_CONFIG:
+            if rpm_file[4] & rpm.RPMFILE_CONFIG: # pylint: disable=no-member
                 result.append(rpm_file[0])
         return result
 
