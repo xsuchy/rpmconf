@@ -123,7 +123,7 @@ class RpmConf(object):
         :rtype: list
 
         """
-        files = rpm.fi(package)
+        files = rpm.fi(package) # pylint: disable=no-member
         result = []
         for rpm_file in files:
             if rpm_file[4] & rpm.RPMFILE_CONFIG:
