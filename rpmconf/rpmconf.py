@@ -288,6 +288,9 @@ class RpmConf(object):
 
         option = ""
         while (option not in ["Y", "I", "N", "O", "S"]):
+            if not os.access(other_file, os.F_OK):
+                print("File {} was removed by 3rd party. Skipping.".format(other_file))
+                return
             self._ls_conf_file(conf_file, other_file)
             print(prompt)
             try:
@@ -296,6 +299,9 @@ class RpmConf(object):
                 option = "S"
             except KeyboardInterrupt:
                 sys.exit(1)
+            if not os.access(other_file, os.F_OK):
+                print("File {} was removed by 3rd party. Skipping.".format(other_file))
+                return
             if not option:
                 option = "N"
             if option == "D":
@@ -329,6 +335,9 @@ class RpmConf(object):
 
         option = ""
         while (option not in ["Y", "I", "N", "O", "S"]):
+            if not os.access(other_file, os.F_OK):
+                print("File {} was removed by 3rd party. Skipping.".format(other_file))
+                return
             self._ls_conf_file(conf_file, other_file)
             print(prompt)
             try:
@@ -337,6 +346,9 @@ class RpmConf(object):
                 option = "S"
             except KeyboardInterrupt:
                 sys.exit(1)
+            if not os.access(other_file, os.F_OK):
+                print("File {} was removed by 3rd party. Skipping.".format(other_file))
+                return
             if not option:
                 option = "Y"
             if option == "D":
