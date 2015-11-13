@@ -1,7 +1,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.12
+Version:        1.0.13
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -92,6 +92,9 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Fri Nov 13 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.13-1
+- 1278134 - do TB when somebody remove file under our hand
+
 * Tue Jun 30 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.12-1
 - disable pylint warning
 
