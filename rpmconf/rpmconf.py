@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-#
+# -*- coding: utf-8 -*-
 # vim: noai:ts=4:sw=4:expandtab
 # pylint: disable=missing-docstring,too-many-arguments,too-many-branches
 #
