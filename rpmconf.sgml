@@ -26,10 +26,10 @@
         <arg>-a, --all</arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <arg>-o<replaceable>package</replaceable>, --owner=<replaceable>package</replaceable></arg>
+        <arg>-o<replaceable>&lt;package&gt;</replaceable>, --owner=<replaceable>&lt;package&gt;</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <arg>-f<replaceable>type</replaceable> --frontend=<replaceable>type</replaceable></arg>
+        <arg>-f<replaceable>&lt;type&gt;</replaceable> --frontend=<replaceable>&lt;type&gt;</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
         <arg>-c, --clean</arg>
@@ -76,13 +76,13 @@
         </listitem>
     </varlistentry>
     <varlistentry>
-        <term>-opackage, --owner=package</term>
+        <term>-o&lt;package&gt;, --owner=&lt;package&gt;</term>
         <listitem>
             <para>Check only configuration files of given package.</para>
         </listitem>
     </varlistentry>
     <varlistentry>
-        <term>-ftype, --frontend=type</term>
+        <term>-f&lt;type&gt;, --frontend=&lt;type&gt;</term>
         <listitem>
             <para>Define which frontend should be used for merging. Valid options are: vimdiff, gvimdiff, diffuse, kdiff3, meld and env. When set to env, the command to use is taken from the environment variable $MERGE. The default is env.</para>
         </listitem>
