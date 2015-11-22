@@ -19,7 +19,10 @@
 """ Main script which will end up in /usr/sbin/rpmconf """
 import argparse
 from rpmconf import rpmconf
+import errno
+import os
 import sys
+import time
 
 def main():
     """ Main entry point. """
@@ -57,7 +60,18 @@ def main():
                             clean=args.clean, debug=args.debug,
                             diff=args.diff, frontend=args.frontend,
                             selinux=args.selinux)
-    rconf.run()
+    if os.geteuid() != 0:
+        sys.stderr.write("Most features are not useful without root privileges!!!\n")
+        time.sleep(5)
+
+    try:
+        rconf.run()
+    except IOError as err:
+        if err.errno in (errno.EACCES, errno.EPERM):
+            sys.stderr.write("Error: You need root permissions to do this!\n")
+            sys.exit(1)
+        else:
+            raise
 
 if __name__ == "__main__":
     main()
