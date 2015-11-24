@@ -1,7 +1,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.13
+Version:        1.0.14
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -92,6 +92,13 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Tue Nov 24 2015 Miroslav Suchý <miroslav@suchy.cz> 1.0.14-1
+- we use utf8
+- call python3 directly
+- 1258464 - improve error message
+- 1282029 - check for root privileges
+- 1283698 - clarify man page
+
 * Fri Nov 13 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.13-1
 - 1278134 - do TB when somebody remove file under our hand
 
