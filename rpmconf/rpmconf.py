@@ -131,8 +131,7 @@ class RpmConf(object):
                 result.append(rpm_file[0])
         return result
 
-    @staticmethod
-    def show_diff(file1, file2):
+    def show_diff(self, file1, file2):
         """Show differences between two files.
 
         :param file1: Path to first file
@@ -141,8 +140,24 @@ class RpmConf(object):
         :type file2: str
 
         """
-        fromdate = time.ctime(os.stat(file1).st_mtime)
-        todate = time.ctime(os.stat(file2).st_mtime)
+        err_msg_template = "Warning: file {} is broken symlink. I'm using /dev/null instead.\n"
+        err_msg = ""
+        if os.path.islink(file1):
+            err_msg += "Info: '{0}' is symlink to '{1}'.\n".format(file1, os.readlink(file1))
+            if self.is_broken_symlink(file1):
+                fromdate = time.ctime(os.stat(file1).st_mtime)
+            else:
+                fromdate = None
+                err_msg += err_msg_template.format(file1)
+                file1 = "/dev/null"
+        if os.path.islink(file2):
+            err_msg += "Info: '{0}' is symlink to '{1}'.\n".format(file2, os.readlink(file2))
+            if self.is_broken_symlink(file2):
+                todate = time.ctime(os.stat(file2).st_mtime)
+            else:
+                todate = None
+                err_msg += err_msg_template.format(file2)
+                file2 = "/dev/null"
         try:
             fromlines = open(file1, "U").readlines()
             tolines = open(file2, "U").readlines()
@@ -155,12 +170,17 @@ class RpmConf(object):
                                         stdout=subprocess.PIPE,
                                         universal_newlines=True)
             diff = diff_out.communicate()[0]
-        pydoc.pager("".join(diff))
+        pydoc.pager(err_msg + "".join(diff))
 
-    @classmethod
-    def _show_cond_diff(cls, file_ex, file1, file2):
+    @staticmethod
+    def is_broken_symlink(file1):
+        """ Returns true if file is broken symlink. False otherwise. """
+        #pylint: disable=no-member
+        return os.path.islink(file1) and os.path.exists(file1)
+
+    def _show_cond_diff(self, file_ex, file1, file2):
         if os.path.lexists(file_ex):
-            cls.show_diff(file1, file2)
+            self.show_diff(file1, file2)
 
     @staticmethod
     def _copy(src, dst):
@@ -272,7 +292,8 @@ class RpmConf(object):
                                          tmp.format(conf_file, "rpmorig"))
 
     def _handle_rpmnew(self, conf_file, other_file):
-        if filecmp.cmp(conf_file, other_file):
+        if not (self.is_broken_symlink(conf_file) or self.is_broken_symlink(other_file)) \
+            and filecmp.cmp(conf_file, other_file):
             self._remove(other_file)
             return
 
@@ -318,7 +339,8 @@ class RpmConf(object):
             self._overwrite(other_file, conf_file)
 
     def _handle_rpmsave(self, conf_file, other_file):
-        if filecmp.cmp(conf_file, other_file):
+        if not (self.is_broken_symlink(conf_file) or self.is_broken_symlink(other_file)) \
+            and filecmp.cmp(conf_file, other_file):
             self._remove(other_file)
             return
 
