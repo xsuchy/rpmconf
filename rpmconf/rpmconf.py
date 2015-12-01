@@ -150,6 +150,8 @@ class RpmConf(object):
                 fromdate = None
                 err_msg += err_msg_template.format(file1)
                 file1 = "/dev/null"
+        else:
+            fromdate = time.ctime(os.stat(file1).st_mtime)
         if os.path.islink(file2):
             err_msg += "Info: '{0}' is symlink to '{1}'.\n".format(file2, os.readlink(file2))
             if self.is_broken_symlink(file2):
@@ -158,6 +160,8 @@ class RpmConf(object):
                 todate = None
                 err_msg += err_msg_template.format(file2)
                 file2 = "/dev/null"
+        else:
+            todate = time.ctime(os.stat(file2).st_mtime)
         try:
             fromlines = open(file1, "U").readlines()
             tolines = open(file2, "U").readlines()
