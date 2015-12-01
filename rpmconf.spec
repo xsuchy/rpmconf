@@ -18,7 +18,9 @@ Requires:       python3-rpmconf
 Requires:       rpm-python3
 BuildRequires:  rpm-python3
 #check
+%if 0%{fedora} != 24
 BuildRequires:  python3-pylint
+%endif
 BuildRequires:  python3-six
 # mergetools
 Suggests: diffuse 
@@ -70,8 +72,10 @@ install -D -m 644 docs/build/man/rpmconf.3 %{buildroot}%{_mandir}/man3/rpmconf.3
 mkdir -p %{buildroot}%{_datadir}/rpmconf/
 
 %check
+%if 0%{fedora} != 24
 python3-pylint --reports=n %{buildroot}%{_sbindir}/rpmconf
 python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
+%endif
 
 %files
 %license LICENSE
