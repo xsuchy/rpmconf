@@ -1,7 +1,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.15
+Version:        1.0.16
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -96,6 +96,10 @@ python3-pylint --reports=n %{buildroot}%{python3_sitelib}/rpmconf/rpmconf.py
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Tue Dec 01 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.16-1
+- temporary workaround for BZ 1287055
+- 1287034 - local variable 'fromdate' referenced before assignment
+
 * Fri Nov 27 2015 Miroslav Suchý <msuchy@redhat.com> 1.0.15-1
 - 1277025 - handle broken symlinks
 
