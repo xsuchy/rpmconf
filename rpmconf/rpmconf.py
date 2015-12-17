@@ -228,7 +228,7 @@ class RpmConf(object):
     def _ls_conf_file(self, conf_file, other_file):
         print("Configuration file '{}'".format(conf_file))
         if self.selinux:
-            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', '--lcontext',
+            print(subprocess.check_output(['/usr/bin/ls', '-ltrd', '--context',
                                            conf_file, other_file],
                                           universal_newlines=True))
         else:
