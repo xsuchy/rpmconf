@@ -18,11 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """ Main script which will end up in /usr/sbin/rpmconf """
 import argparse
-from rpmconf import rpmconf
 import errno
 import os
 import sys
 import time
+from rpmconf import rpmconf
 
 def main():
     """ Main entry point. """
