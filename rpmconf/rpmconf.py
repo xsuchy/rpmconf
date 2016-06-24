@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # vim: noai:ts=4:sw=4:expandtab
-# pylint: disable=missing-docstring,too-many-arguments,too-many-branches
 #
 # Copyright (C) 2014 Miroslav Suchy <msuchy@redhat.com>
 # Copyright (C) 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com>
