@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(name = "rpmconf",
       packages = ["rpmconf"],
-      version = "1.0.17",
+      version = "1.0.18",
       description = "Handle rpmnew and rpmsave files",
       author = "Igor Gnatenko",
       author_email = "i.gnatenko.brain@gmail.com",

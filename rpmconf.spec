@@ -1,7 +1,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.17
+Version:        1.0.18
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -91,6 +91,9 @@ python3-pylint rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Fri Jun 24 2016 Miroslav Suchý <miroslav@suchy.cz> 1.0.18-1
+- add pylintrc
+
 * Fri Jun 24 2016 Miroslav Suchý <miroslav@suchy.cz> 1.0.17-1
 - set loglevel only for rpmconf logger
 - standard import "import errno" comes before "from rpmconf import rpmconf"
