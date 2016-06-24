@@ -81,8 +81,8 @@ class RpmConf(object):
         self.frontend = frontend
         self.selinux = selinux
         self.debug = debug
-        logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger("rpmconf")
+        self.logger.setLevel(logging.INFO)
 
     def run(self):
         """Main function to proceed"""
