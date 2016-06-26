@@ -173,7 +173,10 @@ class RpmConf(object):
                                         stdout=subprocess.PIPE,
                                         universal_newlines=True)
             diff = diff_out.communicate()[0]
-        pydoc.pager(err_msg + "".join(diff))
+        try:
+            pydoc.pager(err_msg + "".join(diff))
+        except TypeError:
+            pydoc.pager(err_msg)
 
     @staticmethod
     def is_broken_symlink(file1):
