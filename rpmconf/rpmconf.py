@@ -146,7 +146,7 @@ class RpmConf(object):
             if self.is_broken_symlink(file1):
                 fromdate = time.ctime(os.stat(file1).st_mtime)
             else:
-                fromdate = None
+                fromdate = ""
                 err_msg += err_msg_template.format(file1)
                 file1 = "/dev/null"
         else:
@@ -156,14 +156,18 @@ class RpmConf(object):
             if self.is_broken_symlink(file2):
                 todate = time.ctime(os.stat(file2).st_mtime)
             else:
-                todate = None
+                todate = ""
                 err_msg += err_msg_template.format(file2)
                 file2 = "/dev/null"
         else:
             todate = time.ctime(os.stat(file2).st_mtime)
         try:
             fromlines = open(file1, "U").readlines()
+            if fromlines == []:
+                fromlines = [""]
             tolines = open(file2, "U").readlines()
+            if tolines == []:
+                tolines = [""]
             diff = difflib.unified_diff(fromlines, tolines,
                                         file1, file2,
                                         fromdate, todate)
@@ -173,6 +177,9 @@ class RpmConf(object):
                                         stdout=subprocess.PIPE,
                                         universal_newlines=True)
             diff = diff_out.communicate()[0]
+            if diff is None:
+                # read the error
+                diff = diff_out.communicate()[1]
         pydoc.pager(err_msg + "".join(diff))
 
     @staticmethod
