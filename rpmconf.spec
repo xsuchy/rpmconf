@@ -1,7 +1,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.18
+Version:        1.0.19
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -91,6 +91,10 @@ pylint-3.6 rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Wed Apr 05 2017 Miroslav Suchý <msuchy@redhat.com> 1.0.19-1
+- implement --test
+- 1350249 - correctly pass /dev/null to difflib
+
 * Fri Jun 24 2016 Miroslav Suchý <miroslav@suchy.cz> 1.0.18-1
 - add pylintrc
 
