@@ -41,6 +41,9 @@
         <arg>-D, --diff</arg>
     </cmdsynopsis>
     <cmdsynopsis>
+        <arg>-t, --test</arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
         <arg>-Z</arg>
     </cmdsynopsis>
 
@@ -110,6 +113,16 @@
                   Non-interactive diff mode.
                   This option works with <literal>--owner</literal> and <literal>--all</literal>.
                   Useful to audit config files after package upgrades.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-t, --test</term>
+        <listitem>
+            <para>
+                  Just test existence of files to merge. If there is some file to merge then rpmconf
+                  will print it and exit with status code 5. If there is none to merge, then return
+                  with exit code 0.
             </para>
         </listitem>
     </varlistentry>

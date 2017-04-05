@@ -42,6 +42,9 @@ def main():
                         metavar="EDITOR",
                         help="Define which frontend should be used for merging."
                              " For list of valid types see man page.")
+    parser.add_argument("-t", "--test", dest="test", action="store_true",
+                        help="Only test if there are some files for merge. Return "
+                             "0 exit code if there is none such file.")
     parser.add_argument("-Z", dest="selinux", action="store_true",
                         help="Display SELinux context of old and new file.")
     parser.add_argument("-o", "--owner", dest="owner", metavar="PACKAGE",
@@ -59,7 +62,7 @@ def main():
     rconf = rpmconf.RpmConf(packages=None if args.all else args.owner,
                             clean=args.clean, debug=args.debug,
                             diff=args.diff, frontend=args.frontend,
-                            selinux=args.selinux)
+                            selinux=args.selinux, test=args.test)
     if os.geteuid() != 0:
         sys.stderr.write("Most features are not useful without root privileges!!!\n")
         time.sleep(5)

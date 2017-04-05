@@ -56,6 +56,8 @@ class RpmConf(object):
     :type diff: bool
     :param frontend: Define which frontend should be used for merging.
     :type frontend: str
+    :param test: Only test if there is some file to merge.
+    :type test: bool
     :ivar packages: :class:`list` of :class:`rpm.mi`
     :ivar clean: :class:`bool`
     :ivar diff: :class:`bool`
@@ -66,7 +68,7 @@ class RpmConf(object):
 
     """
     def __init__(self, packages=None, clean=False, debug=False, selinux=False,
-                 diff=False, frontend=None):
+                 diff=False, frontend=None, test=None):
         trans = rpm.TransactionSet()
         if not packages:
             self.packages = [trans.dbMatch()] # pylint: disable=no-member
@@ -80,16 +82,20 @@ class RpmConf(object):
         self.frontend = frontend
         self.selinux = selinux
         self.debug = debug
+        self.test = test
         self.logger = logging.getLogger("rpmconf")
         self.logger.setLevel(logging.INFO)
 
     def run(self):
         """Main function to proceed"""
+        tested_files = 0
         for pkg in self.packages:
             for pkg_hdr in pkg:
-                self._handle_package(pkg_hdr)
+                tested_files += self._handle_package(pkg_hdr)
         if self.clean:
             self._clean_orphan()
+        if tested_files > 0:
+            sys.exit(5)
 
     @staticmethod
     def flush_input(question):
@@ -281,6 +287,7 @@ class RpmConf(object):
             sys.exit(4)
 
     def _handle_package(self, package):
+        result = 0
         for conf_file in self.get_list_of_config(package):
             if self.diff:
                 conf_rpmnew = "{0}.rpmnew".format(conf_file)
@@ -292,14 +299,27 @@ class RpmConf(object):
             else:
                 tmp = "{}.{}"
                 if os.access(tmp.format(conf_file, "rpmnew"), os.F_OK):
-                    self._handle_rpmnew(conf_file,
-                                        tmp.format(conf_file, "rpmnew"))
+                    if self.test:
+                        print(tmp.format(conf_file, "rpmnew"))
+                        result += 1
+                    else:
+                        self._handle_rpmnew(conf_file,
+                                            tmp.format(conf_file, "rpmnew"))
                 if os.access(tmp.format(conf_file, "rpmsave"), os.F_OK):
-                    self._handle_rpmsave(conf_file,
-                                         tmp.format(conf_file, "rpmsave"))
+                    if self.test:
+                        print(tmp.format(conf_file, "rpmsave"))
+                        result += 1
+                    else:
+                        self._handle_rpmsave(conf_file,
+                                             tmp.format(conf_file, "rpmsave"))
                 if os.access(tmp.format(conf_file, "rpmorig"), os.F_OK):
-                    self._handle_rpmsave(conf_file,
-                                         tmp.format(conf_file, "rpmorig"))
+                    if self.test:
+                        print(tmp.format(conf_file, "rpmorig"))
+                        result += 1
+                    else:
+                        self._handle_rpmsave(conf_file,
+                                             tmp.format(conf_file, "rpmorig"))
+        return result
 
     def _handle_rpmnew(self, conf_file, other_file):
         if not (self.is_broken_symlink(conf_file) or self.is_broken_symlink(other_file)) \
