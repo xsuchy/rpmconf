@@ -182,6 +182,7 @@ class RpmConf(object):
             diff_out = subprocess.Popen(["/usr/bin/diff", "-u", file1, file2],
                                         stdout=subprocess.PIPE,
                                         universal_newlines=True)
+            # pylint: disable=redefined-variable-type
             diff = diff_out.communicate()[0]
             if diff is None:
                 # read the error
