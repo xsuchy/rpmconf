@@ -70,7 +70,7 @@ install -D -m 644 docs/build/man/rpmconf.3 %{buildroot}%{_mandir}/man3/rpmconf.3
 mkdir -p %{buildroot}%{_datadir}/rpmconf/
 
 %check
-python3-pylint rpmconf bin/rpmconf || :
+pylint-3.6 rpmconf bin/rpmconf || :
 
 %files
 %license LICENSE
