@@ -27,15 +27,17 @@ import filecmp
 import logging
 import os
 import pydoc
-import rpm
 import shutil
 import signal
 import select
 import subprocess
 import sys
-import termios
 import time
 import tty
+
+#external
+import rpm
+import termios
 
 __version__ = "1.0.90"
 #uncomment when rpm 4.13 is available
