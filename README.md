@@ -82,7 +82,7 @@ strings and formatting as I hope that sysadmins appreciate unified UI in Debian 
 
 ## Sponsor
 
-This project is sponsored by [Red Hat](https://www.redhat.com/). [Buy](https://www.redhat.com/en/store) Red Hat subscription to sponsor this project.
+This project is sponsored by [Red Hat](https://www.redhat.com/). You can [buy](https://www.redhat.com/en/store) Red Hat subscription to sponsor this project.
 
 
 ## License
