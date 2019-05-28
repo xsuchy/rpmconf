@@ -76,6 +76,7 @@ pylint-3.6 rpmconf bin/rpmconf || :
 %license LICENSE
 %{_sbindir}/rpmconf
 %{_mandir}/man8/rpmconf.8*
+%doc README.md
 
 %files -n python3-rpmconf
 %license LICENSE
