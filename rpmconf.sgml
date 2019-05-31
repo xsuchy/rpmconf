@@ -13,7 +13,7 @@
 <RefNameDiv>
 <RefName><command>&SCRIPTCOMMAND;</command></RefName>
 <RefPurpose>
-    This tool search for .rpmnew, .rpmsave and .rpmorigfiles and ask you what to do with them: Keep current version, place back old version or watch the diff.
+    This tool searches for .rpmnew, .rpmsave and .rpmorig files and asks you what to do with them: keep the current version, replace with the previous version, or review the diff.
 </RefPurpose>
 </RefNameDiv>
 <RefSynopsisDiv>
@@ -54,19 +54,17 @@
 <para>
     Rpmconf will search for all config file of given package (or all
     installed packages) and will check if coresponding .rpmsave, .rpmnew or
-    .rpmorig file exist. In such case you will be asked if you want to
-    keep current version, put back old version or see diff of those two
-    files. Then it delete that unwanted file.
+    .rpmorig files exist. If so, you will be asked if you want to keep the
+    current version, revert to the previous version, or diff the two files.
+    The unwanted file is then deleted.
 </para>
 <para>
-    Additionally rpmconf can also handle application configuration, if
-    application support rpmconf.
-    Application must have executable file present in /usr/share/rpmconf/.
-    The file must have the same name as package itself and the package
-    must own that file.
-    The executable must be idempotent. I.e. you can execute it multiple times
-    and additional run, must not change something. Ideally it will be
-    Puppet/Chef/Ansible/CFengine manifest.
+    Additionally, rpmconf can also handle application configuration, if
+    the application supports rpmconf. The application must have an
+    executable file present in /usr/share/rpmconf/. The file must have the
+    same name as package itself and the package must own that file. The
+    executable must be idempotent, i.e. subsequent executions should have
+    no effect. Ideally it should be a Puppet/Chef/Ansible/CFengine manifest.
 </para>
 </RefSect1>
 
@@ -93,16 +91,15 @@
     <varlistentry>
         <term>-c, --clean</term>
         <listitem>
-            <para>Find all .rpmnew and .rpmsave files in /etc and /var directories. List all files, which belongs to installed packages. Then it write all files which are orphaned and ask you if it is safe to delete them.</para>
+            <para>Find all .rpmnew and .rpmsave files in /etc and /var directories. List all files belonging to installed packages, then write all files which are orphaned and ask if it is safe to delete them.</para>
         </listitem>
     </varlistentry>
     <varlistentry>
         <term>-d, --debug</term>
         <listitem>
-            <para>Dry run. Instead of executing an action (move/remove of file) it will
-                  be echoed to standard output. However executable for merging of configuration files
-		  is executed. Beware that this option is position sensitive. And only action specified after --debug are dry run.
-          E.g. --all --debug --clean, will run in dry run mode only for --clean, but not for --all.
+            <para>Dry run. Instead of executing an action (move or delete a file) the filename will
+                  be echoed to standard output. However, the executable for merging of configuration files
+		  will still be executed. Beware that this option is position-sensitive: only actions specified after --debug are dry-run, e.g. --all --debug --clean will run --clean in dry run mode but not --all.
             </para>
         </listitem>
     </varlistentry>
@@ -121,8 +118,8 @@
         <listitem>
             <para>
                   Just test existence of files to merge. If there is some file to merge then rpmconf
-                  will print it and exit with status code 5. If there is none to merge, then return
-                  with exit code 0.
+                  will print it and exit with status code 5. If there are none to merge, then exit
+                  with status code 0.
             </para>
         </listitem>
     </varlistentry>
@@ -130,7 +127,7 @@
         <term>-V, --version</term>
         <listitem>
             <para>
-                  Display &SCRIPTCOMMAND; version. This option expect that this script
+                  Display &SCRIPTCOMMAND; version. This option expects that this script
 		  is installed as rpm package.
             </para>
         </listitem>
@@ -139,7 +136,7 @@
         <term>-Z</term>
         <listitem>
             <para>
-                  Display SELinux context of old and new file. Note: if you choose to install .rpmsave version. It is copied to original filename, therefore SELinux context is reset to default value specified by SELinux policy.
+                  Display the SELinux contexts of the old and new files. Note: if you choose to install .rpmsave version. It is copied to the original filename, therefore its SELinux context is reset to the default value specified by SELinux policy.
             </para>
         </listitem>
     </varlistentry>
