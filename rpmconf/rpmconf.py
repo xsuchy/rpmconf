@@ -383,6 +383,9 @@ class RpmConf(object):
                 os.kill(os.getpid(), signal.SIGSTOP)
             if option == "M":
                 self._merge_conf_files(conf_file, other_file)
+                if not os.access(other_file, os.F_OK):
+                    print("File {} has been merged.".format(other_file))
+                    return
         if option in ["N", "O"]:
             self._remove(other_file)
         if option in ["Y", "I"]:
@@ -431,6 +434,9 @@ class RpmConf(object):
                 os.kill(os.getpid(), signal.SIGSTOP)
             if option == "M":
                 self._merge_conf_files(conf_file, other_file)
+                if not os.access(other_file, os.F_OK):
+                    print("File {} has been merged.".format(other_file))
+                    return
         if option in ["Y", "I"]:
             self._remove(other_file)
         if option in ["N", "O"]:
