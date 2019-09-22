@@ -26,6 +26,8 @@ Suggests: kdiff3
 Suggests: meld
 Suggests: vim-X11
 Suggests: vim-enhanced
+# sdiff
+Suggests: diffutils
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do

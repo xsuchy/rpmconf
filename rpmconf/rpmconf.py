@@ -276,6 +276,22 @@ class RpmConf(object):
                     self._remove("{}.orig".format(conf_file))
                 except subprocess.CalledProcessError:
                     print("Files not merged.")
+            elif self.frontend == "sdiff":
+                try:
+                    tmp_file_name = (tempfile.mkstemp(prefix='rpmconf_'))[1]
+                    subprocess.check_call(
+                        ["/usr/bin/sdiff", "-o", tmp_file_name,
+                         conf_file, other_file])
+                    self._remove(other_file)
+                    self._copy(tmp_file_name, conf_file)
+                    self._remove(tmp_file_name)
+                except subprocess.CalledProcessError as e:
+                    if e.returncode == 1:
+                        self._remove(other_file)
+                        self._copy(tmp_file_name, conf_file)
+                        self._remove(tmp_file_name)
+                    else: # returncode == 2
+                        print("Files not merged.")
             elif (self.frontend == "env" or self.frontend is None) and \
                     os.environ.get('MERGE') is not None:
                 merge_tool = os.environ.get('MERGE')

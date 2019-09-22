@@ -85,7 +85,7 @@
     <varlistentry>
         <term>-f&lt;type&gt;, --frontend=&lt;type&gt;</term>
         <listitem>
-            <para>Define which frontend should be used for merging. Valid options are: vimdiff, gvimdiff, diffuse, kdiff3, meld and env. When set to env, the command to use is taken from the environment variable $MERGE. The default is env.</para>
+            <para>Define which frontend should be used for merging. Valid options are: vimdiff, gvimdiff, diffuse, kdiff3, meld, sdiff and env. When set to env, the command to use is taken from the environment variable $MERGE. The default is env.</para>
         </listitem>
     </varlistentry>
     <varlistentry>
