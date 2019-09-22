@@ -1,3 +1,5 @@
+%bcond_with tests
+
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
@@ -17,9 +19,10 @@ Requires:       %{name}-base
 Requires:       python3-rpmconf
 Requires:       rpm-python3
 BuildRequires:  rpm-python3
-#check
+%if %{with tests}
 BuildRequires:  python3-pylint
 BuildRequires:  python3-six
+%endif
 # mergetools
 Suggests: diffuse 
 Suggests: kdiff3
@@ -72,7 +75,9 @@ install -D -m 644 docs/build/man/rpmconf.3 %{buildroot}%{_mandir}/man3/rpmconf.3
 mkdir -p %{buildroot}%{_datadir}/rpmconf/
 
 %check
+%if %{with tests}
 pylint-3.6 rpmconf bin/rpmconf || :
+%endif
 
 %files
 %license LICENSE

@@ -32,6 +32,7 @@ import signal
 import select
 import subprocess
 import sys
+import tempfile
 import time
 import tty
 
