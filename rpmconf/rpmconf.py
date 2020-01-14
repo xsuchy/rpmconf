@@ -171,10 +171,10 @@ class RpmConf(object):
         else:
             todate = time.ctime(os.stat(file2).st_mtime)
         try:
-            fromlines = open(file1, "U").readlines()
+            fromlines = open(file1).readlines()
             if fromlines == []:
                 fromlines = [""]
-            tolines = open(file2, "U").readlines()
+            tolines = open(file2).readlines()
             if tolines == []:
                 tolines = [""]
             diff = difflib.unified_diff(fromlines, tolines,
