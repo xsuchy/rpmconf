@@ -3,7 +3,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.0.20
+Version:        1.0.21
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -99,6 +99,9 @@ pylint-3.6 rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Thu Jan 16 2020 Miroslav Suchý <msuchy@redhat.com> 1.0.21-1
+- Drop the deprecated no-op "U" mode for open() to support Python 3.9
+
 * Sun Sep 22 2019 Miroslav Suchý <msuchy@redhat.com> 1.0.20-1
 - remove old changelog entries
 - better handle message after merging
