@@ -50,18 +50,18 @@ This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
 with them:
 Keep current version, place back old version, watch the diff or merge.
 
-%package -n python3-rpmconf
+%package -n python%{python3_pkgversion}-rpmconf
 Summary:        Python interface for %{name}
 BuildArch:      noarch
 
-%description -n python3-rpmconf
+%description -n python%{python3_pkgversion}-rpmconf
 Python interface for %{name}. Mostly useful for developers only.
 
-%package -n python3-rpmconf-doc
+%package -n python%{python3_pkgversion}-rpmconf-doc
 Summary:        Documentation of python interface for %{name}
 BuildArch:      noarch
 
-%description -n python3-rpmconf-doc
+%description -n python%{python3_pkgversion}-rpmconf-doc
 Documentation generated from code of python3-rpmconf.
 
 %package base
@@ -102,13 +102,13 @@ pylint-3 rpmconf bin/rpmconf || :
 %{_mandir}/man8/rpmconf.8*
 %doc README.md
 
-%files -n python3-rpmconf
+%files -n python%{python3_pkgversion}-rpmconf
 %license LICENSE
 %{python3_sitelib}/rpmconf/
 %{python3_sitelib}/rpmconf-*.egg-info
 %{_mandir}/man3/rpmconf.3*
 
-%files -n python3-rpmconf-doc
+%files -n python%{python3_pkgversion}-rpmconf-doc
 %license LICENSE
 %doc docs/build/html/
 
