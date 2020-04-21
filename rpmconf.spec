@@ -32,6 +32,9 @@ BuildRequires:  python%{python3_pkgversion}-six
 %endif
 %endif
 # mergetools
+%if 0%{?rhel} == 7
+  # nothing
+%else
 Suggests: diffuse
 Suggests: diffutils
 Suggests: kdiff3
@@ -40,6 +43,7 @@ Suggests: vim-X11
 Suggests: vim-enhanced
 # sdiff
 Suggests: diffutils
+%endif
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
