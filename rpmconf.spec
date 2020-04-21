@@ -77,7 +77,11 @@ Directory hierarchy for installation scripts, which are handled by rpmconf.
 %build
 %{__python3} setup.py build
 docbook2man rpmconf.sgml
+%if 0%{?rhel} == 7
+make -C docs html man SPHINXBUILD=sphinx-build-3.6
+%else
 make -C docs html man
+%endif
 
 %install
 %{__python3} setup.py install --skip-build \
@@ -89,7 +93,7 @@ mkdir -p %{buildroot}%{_datadir}/rpmconf/
 
 %check
 %if %{with tests}
-pylint-3.6 rpmconf bin/rpmconf || :
+pylint-3 rpmconf bin/rpmconf || :
 %endif
 
 %files
