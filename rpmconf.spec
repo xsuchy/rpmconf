@@ -1,4 +1,7 @@
 %bcond_with tests
+%if 0%{?rhel} == 7
+%global python3_pkgversion 36                                                                                                                           
+%endif
 
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
@@ -13,18 +16,24 @@ Source0:        %{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  docbook-utils
 BuildRequires:  docbook-dtd31-sgml
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-devel
+BuildRequires:  python%{python3_pkgversion}-sphinx
+BuildRequires:  python%{python3_pkgversion}-devel
 Requires:       %{name}-base
-Requires:       python3-rpmconf
+Requires:       python%{python3_pkgversion}-rpmconf
+%if 0%{?rhel} == 7
+Requires:       python36-rpm
+BuildRequires:  python36-rpm
+%else
 Requires:       rpm-python3
 BuildRequires:  rpm-python3
 %if %{with tests}
-BuildRequires:  python3-pylint
-BuildRequires:  python3-six
+BuildRequires:  python%{python3_pkgversion}-pylint
+BuildRequires:  python%{python3_pkgversion}-six
+%endif
 %endif
 # mergetools
-Suggests: diffuse 
+Suggests: diffuse
+Suggests: diffutils
 Suggests: kdiff3
 Suggests: meld
 Suggests: vim-X11
