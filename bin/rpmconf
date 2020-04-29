@@ -52,6 +52,10 @@ def main():
                         help="Check only configuration files of given package.")
     parser.add_argument("-v", "--version", dest="version", action="store_true",
                         help="Display rpmconf version.")
+    parser.add_argument("-x", "--exclude", dest="exclude", metavar="DIRECTORY",
+                        nargs="*",
+                        help="Exclude path from checking. Applies only for -c.")
+
     args = parser.parse_args()
     if args.version:
         print(rpmconf.__version__)
@@ -62,7 +66,8 @@ def main():
     rconf = rpmconf.RpmConf(packages=None if args.all else args.owner,
                             clean=args.clean, debug=args.debug,
                             diff=args.diff, frontend=args.frontend,
-                            selinux=args.selinux, test=args.test)
+                            selinux=args.selinux, test=args.test,
+                            exclude=args.exclude)
     if os.geteuid() != 0:
         sys.stderr.write("Most features are not useful without root privileges!!!\n")
         time.sleep(5)

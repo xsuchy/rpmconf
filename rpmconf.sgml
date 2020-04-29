@@ -44,6 +44,9 @@
         <arg>-t, --test</arg>
     </cmdsynopsis>
     <cmdsynopsis>
+        <arg>-x, --exclude <replaceable>&lt;DIRECTORY&gt;</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
         <arg>-Z</arg>
     </cmdsynopsis>
 
@@ -129,6 +132,14 @@
             <para>
                   Display &SCRIPTCOMMAND; version. This option expects that this script
 		  is installed as rpm package.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-x, --exclude [DIRECTORY [DIRECTORY ...]]</term>
+        <listitem>
+            <para>
+                  Exclude DIRECTORY from checking. Applies only for -c.
             </para>
         </listitem>
     </varlistentry>

@@ -35,6 +35,7 @@ import sys
 import tempfile
 import time
 import tty
+from pathlib import Path
 
 #external
 import rpm
@@ -68,11 +69,15 @@ class RpmConf(object):
     :ivar selinux: :class:`bool`
     :ivar debug: :class:`bool`
     :ivar logger: :class:`logging.Logger`
+    :param exclude: List of directories which should be skipped.
+    :type exclude: list
 
     """
     def __init__(self, packages=None, clean=False, debug=False, selinux=False,
-                 diff=False, frontend=None, test=None):
+                 diff=False, frontend=None, test=None, exclude=None):
         trans = rpm.TransactionSet()
+        if exclude is None:
+            exclude = []
         if not packages:
             self.packages = [trans.dbMatch()] # pylint: disable=no-member
         else:
@@ -86,6 +91,7 @@ class RpmConf(object):
         self.selinux = selinux
         self.debug = debug
         self.test = test
+        self.exclude = [Path(os.path.realpath(x)) for x in exclude]
         self.logger = logging.getLogger("rpmconf")
         self.logger.setLevel(logging.INFO)
 
@@ -460,12 +466,13 @@ class RpmConf(object):
     def _clean_orphan(self):
         files_merge = []
         files_delete = []
+        excludes = self.exclude + [Path('/var/lib/mock')]
         for topdir in ["/etc", "/var", "/usr"]:
             self.logger.info("Seaching through: %s", topdir)
-            for root, dirs, files in os.walk(topdir, followlinks=True):
-                if root == "/var/lib":
-                    # skip /var/lib/mock
-                    dirs[:] = [d for d in dirs if d != "mock"]
+            if Path(topdir) in excludes:
+                continue
+            for root, dirs, files in os.walk(topdir, followlinks=True, topdown=True):
+                dirs[:] = [d for d in dirs if Path(os.path.join(root, d)) not in excludes]
                 for name in files:
                     l_name = os.path.join(root, name)
                     if os.path.splitext(l_name)[1] in [".rpmnew", ".rpmsave"]:
