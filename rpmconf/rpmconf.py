@@ -79,10 +79,14 @@ class RpmConf(object):
         if exclude is None:
             exclude = []
         self.packages = []
-        if packages is not None: #this can be [] if neither -a nor -o is set
-            for pkg in packages:
-                tmp = trans.dbMatch("name", pkg) # pylint: disable=no-member
-                self.packages.append(tmp)
+        if packages is None: #this can be [] if neither -a nor -o is set
+            self.packages = [trans.dbMatch()] # pylint: disable=no-member
+        else:
+            if packages:
+                for pkg in packages:
+                    tmp = trans.dbMatch("name", pkg) # pylint: disable=no-member
+                    self.packages.append(tmp)
+
         self.clean = clean
         self.diff = diff
         self.frontend = frontend
