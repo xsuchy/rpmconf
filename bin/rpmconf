@@ -63,7 +63,8 @@ def main():
     if not (args.owner or args.all or args.clean):
         parser.print_help()
         sys.exit(1)
-    rconf = rpmconf.RpmConf(packages=None if args.all else args.owner,
+    owner = args.owner if args.owner else []
+    rconf = rpmconf.RpmConf(packages=None if args.all else owner,
                             clean=args.clean, debug=args.debug,
                             diff=args.diff, frontend=args.frontend,
                             selinux=args.selinux, test=args.test,

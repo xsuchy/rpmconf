@@ -78,10 +78,8 @@ class RpmConf(object):
         trans = rpm.TransactionSet()
         if exclude is None:
             exclude = []
-        if not packages:
-            self.packages = [trans.dbMatch()] # pylint: disable=no-member
-        else:
-            self.packages = []
+        self.packages = []
+        if packages is not None: #this can be [] if neither -a nor -o is set
             for pkg in packages:
                 tmp = trans.dbMatch("name", pkg) # pylint: disable=no-member
                 self.packages.append(tmp)
