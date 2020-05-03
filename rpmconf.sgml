@@ -32,6 +32,9 @@
         <arg>-f<replaceable>&lt;type&gt;</replaceable> --frontend=<replaceable>&lt;type&gt;</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
+        <arg>--root <replaceable>&lt;ROOT&gt;</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
         <arg>-c, --clean</arg>
     </cmdsynopsis>
     <cmdsynopsis>
@@ -113,6 +116,14 @@
                   Non-interactive diff mode.
                   This option works with <literal>--owner</literal> and <literal>--all</literal>.
                   Useful to audit config files after package upgrades.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>--root ROOT</term>
+        <listitem>
+            <para>
+                  Specifies an alternative installroot, relative to where all packages are installed.
             </para>
         </listitem>
     </varlistentry>

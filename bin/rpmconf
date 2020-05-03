@@ -42,6 +42,10 @@ def main():
                         metavar="EDITOR",
                         help="Define which frontend should be used for merging."
                              " For list of valid types see man page.")
+    parser.add_argument("--root", dest="root", action="store",
+                        metavar="ROOT",
+                        help="Specifies an alternative installroot, relative to"
+                             " where all packages are installed.")
     parser.add_argument("-t", "--test", dest="test", action="store_true",
                         help="Only test if there are some files for merge. Return "
                              "0 exit code if there is none such file.")
@@ -68,7 +72,7 @@ def main():
                             clean=args.clean, debug=args.debug,
                             diff=args.diff, frontend=args.frontend,
                             selinux=args.selinux, test=args.test,
-                            exclude=args.exclude)
+                            exclude=args.exclude, root=args.root)
     if os.geteuid() != 0:
         sys.stderr.write("Most features are not useful without root privileges!!!\n")
         time.sleep(5)

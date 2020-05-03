@@ -70,12 +70,17 @@ class RpmConf(object):
     :ivar debug: :class:`bool`
     :ivar logger: :class:`logging.Logger`
     :param exclude: List of directories which should be skipped.
-    :type exclude: list
-
+    :type exclude: listi
+    :param root: Defines alternative installroot.
+    :type root: str
+    :ivar root: :class:`str`
     """
     def __init__(self, packages=None, clean=False, debug=False, selinux=False,
-                 diff=False, frontend=None, test=None, exclude=None):
-        self.trans = rpm.TransactionSet()
+                 diff=False, frontend=None, test=None, exclude=None, root=None):
+        if root:
+            self.trans = rpm.TransactionSet(rootdir=root)
+        else:
+            self.trans = rpm.TransactionSet()
         self.trans.setVSFlags((rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
         if exclude is None:
             exclude = []
@@ -95,6 +100,7 @@ class RpmConf(object):
         self.debug = debug
         self.test = test
         self.exclude = [Path(os.path.realpath(x)) for x in exclude]
+        self.root = root
         self.logger = logging.getLogger("rpmconf")
         self.logger.setLevel(logging.INFO)
 
@@ -131,8 +137,7 @@ class RpmConf(object):
         signal.signal(signal.SIGINT, signal.default_int_handler)
         return input(question)
 
-    @staticmethod
-    def get_list_of_config(package):
+    def get_list_of_config(self, package):
         """Get all files marked as config in package
 
         :param package: RPM Header of package
@@ -145,7 +150,10 @@ class RpmConf(object):
         result = []
         for rpm_file in files:
             if rpm_file[4] & rpm.RPMFILE_CONFIG: # pylint: disable=no-member
-                result.append(rpm_file[0])
+                file_name = rpm_file[0]
+                if self.root:
+                    file_name = os.path.join(self.root, file_name)
+                result.append(file_name)
         return result
 
     def show_diff(self, file1, file2):
@@ -472,6 +480,8 @@ class RpmConf(object):
             self.logger.info("Seaching through: %s", topdir)
             if Path(topdir) in excludes:
                 continue
+            if self.root:
+                topdir = os.path.join(self.root, topdir)
             for root, dirs, files in os.walk(topdir, followlinks=True, topdown=True):
                 dirs[:] = [d for d in dirs if Path(os.path.join(root, d)) not in excludes]
                 for name in files:
