@@ -75,16 +75,17 @@ class RpmConf(object):
     """
     def __init__(self, packages=None, clean=False, debug=False, selinux=False,
                  diff=False, frontend=None, test=None, exclude=None):
-        trans = rpm.TransactionSet()
+        self.trans = rpm.TransactionSet()
+        self.trans.setVSFlags((rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
         if exclude is None:
             exclude = []
         self.packages = []
         if packages is None: #this can be [] if neither -a nor -o is set
-            self.packages = [trans.dbMatch()] # pylint: disable=no-member
+            self.packages = [self.trans.dbMatch()] # pylint: disable=no-member
         else:
             if packages:
                 for pkg in packages:
-                    tmp = trans.dbMatch("name", pkg) # pylint: disable=no-member
+                    tmp = self.trans.dbMatch("name", pkg) # pylint: disable=no-member
                     self.packages.append(tmp)
 
         self.clean = clean
@@ -450,14 +451,12 @@ class RpmConf(object):
         if option in ["N", "O"]:
             self._overwrite(other_file, conf_file)
 
-    @staticmethod
-    def _clean_orphan_file(rpmnew_rpmsave):
+    def _clean_orphan_file(self, rpmnew_rpmsave):
         # rpmnew_rpmsave is lowercase name of rpmnew/rpmsave file
         (rpmnew_rpmsave_orig, _) = os.path.splitext(rpmnew_rpmsave)
         package_merge = file_delete = None
-        trans = rpm.TransactionSet()
         # pylint: disable=no-member
-        tmp_db = trans.dbMatch("basenames", rpmnew_rpmsave_orig)
+        tmp_db = self.trans.dbMatch("basenames", rpmnew_rpmsave_orig)
         if tmp_db.count() == 0:
             file_delete = rpmnew_rpmsave
         else:
