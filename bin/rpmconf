@@ -54,7 +54,7 @@ def main():
     parser.add_argument("-o", "--owner", dest="owner", metavar="PACKAGE",
                         nargs="*",
                         help="Check only configuration files of given package.")
-    parser.add_argument("-v", "--version", dest="version", action="store_true",
+    parser.add_argument("-V", "--version", dest="version", action="store_true",
                         help="Display rpmconf version.")
     parser.add_argument("-x", "--exclude", dest="exclude", metavar="DIRECTORY",
                         nargs="*",
