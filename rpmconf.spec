@@ -75,6 +75,8 @@ Directory hierarchy for installation scripts, which are handled by rpmconf.
 %setup -q
 
 %build
+sed -i 's/__version__ = .*/__version__ = "%{version}"/' rpmconf/rpmconf.py
+sed -i 's/version = .*,/version = "%{version}",/' setup.py 
 %{__python3} setup.py build
 docbook2man rpmconf.sgml
 %if 0%{?rhel} == 7
