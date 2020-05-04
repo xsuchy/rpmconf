@@ -152,7 +152,7 @@ class RpmConf(object):
             if rpm_file[4] & rpm.RPMFILE_CONFIG: # pylint: disable=no-member
                 file_name = rpm_file[0]
                 if self.root:
-                    file_name = os.path.join(self.root, file_name)
+                    file_name = os.path.normpath(self.root + file_name)
                 result.append(file_name)
         return result
 
@@ -481,7 +481,7 @@ class RpmConf(object):
             if Path(topdir) in excludes:
                 continue
             if self.root:
-                topdir = os.path.join(self.root, topdir)
+                topdir = os.path.normpath(self.root + topdir)
             for root, dirs, files in os.walk(topdir, followlinks=True, topdown=True):
                 dirs[:] = [d for d in dirs if Path(os.path.join(root, d)) not in excludes]
                 for name in files:
