@@ -316,7 +316,7 @@ class RpmConf(object):
                 print(repr(merge_tool))
                 subprocess.check_call([merge_tool, conf_file, other_file])
             else:
-                self.logger.error("You did not selected any frontend for merge.\n" +
+                self.logger.error("You did not select any frontend for merge.\n" +
                                   "      Define it with environment variable 'MERGE' or flag -f.")
                 sys.exit(2)
         except FileNotFoundError as err:
