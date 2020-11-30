@@ -6,7 +6,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 URL:            http://wiki.github.com/xsuchy/rpmconf
 # source is created by:
@@ -119,6 +119,10 @@ pylint-3 rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Mon Nov 30 2020 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- BR make
+- Fix typo in error message
+
 * Mon May 04 2020 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
 - fix version in released rpm
 - fix short version of --version
