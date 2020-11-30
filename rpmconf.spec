@@ -14,6 +14,7 @@ URL:            http://wiki.github.com/xsuchy/rpmconf
 # cd rpmconf; tito build --tgz
 Source0:        %{name}-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  make
 BuildRequires:  docbook-utils
 BuildRequires:  docbook-dtd31-sgml
 BuildRequires:  python%{python3_pkgversion}-sphinx
