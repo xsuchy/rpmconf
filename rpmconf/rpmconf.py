@@ -477,7 +477,7 @@ class RpmConf(object):
         files_delete = []
         excludes = self.exclude + [Path('/var/lib/mock')]
         for topdir in ["/etc", "/var", "/usr"]:
-            self.logger.info("Seaching through: %s", topdir)
+            self.logger.info("Searching through: %s", topdir)
             if Path(topdir) in excludes:
                 continue
             if self.root:
