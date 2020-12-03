@@ -21,7 +21,6 @@ import argparse
 import errno
 import os
 import sys
-import time
 from rpmconf import rpmconf
 
 def main():
@@ -75,7 +74,6 @@ def main():
                             exclude=args.exclude, root=args.root)
     if os.geteuid() != 0:
         sys.stderr.write("Most features are not useful without root privileges!!!\n")
-        time.sleep(5)
 
     try:
         rconf.run()
