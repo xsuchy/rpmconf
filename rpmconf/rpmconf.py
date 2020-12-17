@@ -74,9 +74,13 @@ class RpmConf(object):
     :param root: Defines alternative installroot.
     :type root: str
     :ivar root: :class:`str`
+    :param unattended: Defines unattended mode.
+    :type unattended: str
+    :ivar unattended: :class:`str`
     """
     def __init__(self, packages=None, clean=False, debug=False, selinux=False,
-                 diff=False, frontend=None, test=None, exclude=None, root=None):
+                 diff=False, frontend=None, test=None, exclude=None, root=None,
+                 unattended=None):
         if root:
             self.trans = rpm.TransactionSet(rootdir=root)
         else:
@@ -101,6 +105,7 @@ class RpmConf(object):
         self.test = test
         self.exclude = [Path(os.path.realpath(x)) for x in exclude]
         self.root = root
+        self.unattended = unattended
         self.logger = logging.getLogger("rpmconf")
         self.logger.setLevel(logging.INFO)
 
@@ -364,6 +369,13 @@ class RpmConf(object):
             self._remove(other_file)
             return
 
+        if self.unattended == "use_maintainer":
+            self._overwrite(other_file, conf_file)
+            return
+        if self.unattended in ["use_your", "default"]:
+            self._remove(other_file)
+            return
+
         prompt = """ ==> Package distributor has shipped an updated version.
    What would you like to do about it ?  Your options are:
     Y or I  : install the package maintainer's version
@@ -412,6 +424,13 @@ class RpmConf(object):
         if not (self.is_broken_symlink(conf_file) or self.is_broken_symlink(other_file)) \
             and filecmp.cmp(conf_file, other_file):
             self._remove(other_file)
+            return
+
+        if self.unattended in ["use_maintainer", "default"]:
+            self._remove(other_file)
+            return
+        if self.unattended == "use_your":
+            self._overwrite(other_file, conf_file)
             return
 
         prompt = """ ==> Package distributor has shipped an updated version.
