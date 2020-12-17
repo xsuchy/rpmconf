@@ -54,6 +54,17 @@ def main():
     parser.add_argument("-o", "--owner", dest="owner", metavar="PACKAGE",
                         nargs="*",
                         help="Check only configuration files of given package.")
+    parser.add_argument("-u", "--unattended", dest="unattended",
+                        choices=["use_maintainer", "use_your", "default"],
+                        nargs="?", const="default", metavar="MODE",
+                        help="Unattended mode: do not prompt user, perform actions "
+                             "based on MODE. use_maintainer replaces existing "
+                             "configuration files with .rpmnew and deletes all "
+                             ".rpmsave files. use_your deletes .rpmnew files and "
+                             "replaces existing configuration files with .rpmsave "
+                             "files. default does use_your for .rpmnew files and "
+                             " use_maintainer for .rpmsave (same as prompts). "
+                             "(default: %(default)s)")
     parser.add_argument("-V", "--version", dest="version", action="store_true",
                         help="Display rpmconf version.")
     parser.add_argument("-x", "--exclude", dest="exclude", metavar="DIRECTORY",
@@ -77,7 +88,8 @@ def main():
                             clean=args.clean, debug=args.debug,
                             diff=args.diff, frontend=args.frontend,
                             selinux=args.selinux, test=args.test,
-                            exclude=args.exclude, root=args.root)
+                            exclude=args.exclude, root=args.root,
+                            unattended=args.unattended)
 
     try:
         rconf.run()

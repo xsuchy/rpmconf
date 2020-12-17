@@ -47,6 +47,9 @@
         <arg>-t, --test</arg>
     </cmdsynopsis>
     <cmdsynopsis>
+        <arg>-u, --unattended <replaceable><optional>&lt;MODE&gt;</optional></replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
         <arg>-x, --exclude <replaceable>&lt;DIRECTORY&gt;</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
@@ -134,6 +137,20 @@
                   Just test existence of files to merge. If there is some file to merge then rpmconf
                   will print it and exit with status code 5. If there are none to merge, then exit
                   with status code 0.
+            </para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>-u [&lt;MODE&gt;], --unattended [&lt;MODE&gt;]</term>
+        <listitem>
+            <para>
+                  Unattended mode.
+                  Do not prompt user, but perform actions based on MODE. Valid options are: use_maintainer, use_your, default.
+                  use_maintainer replaces existing configuration files with .rpmnew files and deletes leftover .rpmsave and
+                  .rpmorig files. use_your deletes .rpmnew files and replaces existing configuration files with .rpmsave files.
+                  default does use_your for .rpmnew files and use_maintainer for .rpmsave files, as are the default prompts
+                  in interactive mode.
+                  Specifying MODE is optional, default is used by default.
             </para>
         </listitem>
     </varlistentry>
