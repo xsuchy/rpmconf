@@ -6,7 +6,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 URL:            https://github.com/xsuchy/rpmconf
 # source is created by:
@@ -119,6 +119,9 @@ pylint-3 rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Thu Mar 04 2021 Miroslav Suchý <msuchy@redhat.com> 1.1.4-1
+- 1934986 - update link
+
 * Tue Dec 22 2020 Miroslav Suchý <miroslav@suchy.cz> 1.1.3-1
 - Implement unattended mode.
 - move init section after sleep() so it can be interrupted by Ctrl+C
