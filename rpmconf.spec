@@ -8,7 +8,7 @@ Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
 Version:        1.1.3
 Release:        1%{?dist}
-URL:            http://wiki.github.com/xsuchy/rpmconf
+URL:            https://github.com/xsuchy/rpmconf
 # source is created by:
 # git clone https://github.com/xsuchy/rpmconf.git
 # cd rpmconf; tito build --tgz
