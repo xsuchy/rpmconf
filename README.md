@@ -72,6 +72,10 @@ or like this for all packages:
     cd source
     tito build --test --rpm
 
+## Packaging status
+
+![rpmconf versions](https://repology.org/badge/vertical-allrepos/rpmconf.svg?exclude_unsupported=1&header=rpmconfg)
+
 ## History
 
 Originally there was no such tool for RPM world. I came from Debian world where handling
