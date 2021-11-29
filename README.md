@@ -74,7 +74,7 @@ or like this for all packages:
 
 ## Packaging status
 
-![rpmconf versions](https://repology.org/badge/vertical-allrepos/rpmconf.svg?exclude_unsupported=1&header=rpmconfg)
+![rpmconf versions](https://repology.org/badge/vertical-allrepos/rpmconf.svg?exclude_unsupported=1&header=rpmconf)
 
 ## History
 
