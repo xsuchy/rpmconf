@@ -494,7 +494,9 @@ class RpmConf(object):
     def _clean_orphan(self):
         files_merge = []
         files_delete = []
-        excludes = self.exclude + [Path('/var/lib/mock')]
+        dirs_inodes = set()
+        excludes = self.exclude + [Path('/var/lib/mock'), Path('/var/run/'),
+                                   Path('/var/lib/docker'), Path('/var/lib/containers')]
         for topdir in ["/etc", "/var", "/usr"]:
             self.logger.info("Searching through: %s", topdir)
             if Path(topdir) in excludes:
@@ -503,6 +505,15 @@ class RpmConf(object):
                 topdir = os.path.normpath(self.root + topdir)
             for root, dirs, files in os.walk(topdir, followlinks=True, topdown=True):
                 dirs[:] = [d for d in dirs if Path(os.path.join(root, d)) not in excludes]
+                # lookup inodes number and check for duplicates to avoid infinite loops
+                scandirs = []
+                for dirname in dirs:
+                    st = os.stat(os.path.join(root, dirname))
+                    dirkey = st.st_dev, st.st_ino
+                    if dirkey not in dirs_inodes:
+                        dirs_inodes.add(dirkey)
+                        scandirs.append(dirname)
+                dirs[:] = scandirs
                 for name in files:
                     l_name = os.path.join(root, name)
                     if os.path.splitext(l_name)[1] in [".rpmnew", ".rpmsave"]:

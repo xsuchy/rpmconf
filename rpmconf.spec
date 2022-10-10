@@ -7,7 +7,7 @@ Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
 Version:        1.1.6
-Release:        1%{?dist}
+Release:        2%{?dist}.1
 URL:            https://github.com/xsuchy/rpmconf
 # source is created by:
 # git clone https://github.com/xsuchy/rpmconf.git
@@ -119,6 +119,12 @@ pylint-3 rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Tue Oct 04 2022 msuchy <msuchy@redhat.com> - 1.1.6-2.1
+- rebuilt
+
+* Tue Oct 04 2022 msuchy <msuchy@redhat.com> - 1.1.6-1.1
+- rebuilt
+
 * Mon Aug 29 2022 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
 - Automatic commit of package [rpmconf] release [1.1.5-1].
 - Create codeql-analysis.yml
