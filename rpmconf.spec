@@ -7,7 +7,7 @@ Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPLv3
 Version:        1.1.7
-Release:        1%{?dist}.1
+Release:        1%{?dist}
 URL:            https://github.com/xsuchy/rpmconf
 # source is created by:
 # git clone https://github.com/xsuchy/rpmconf.git
