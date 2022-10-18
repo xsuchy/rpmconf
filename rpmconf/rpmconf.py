@@ -379,7 +379,7 @@ class RpmConf(object):
         prompt = """ ==> Package distributor has shipped an updated version.
    What would you like to do about it ?  Your options are:
     Y or I  : install the package maintainer's version
-    N or O  : keep your currently-installed version
+    N or O  : keep your currently-installed version (and delete .rpmsave)
       D     : show the differences between the versions
       M     : merge configuration files
       Z     : background this process to examine the situation
