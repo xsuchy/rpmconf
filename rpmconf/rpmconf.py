@@ -331,6 +331,10 @@ class RpmConf(object):
     def _handle_package(self, package):
         result = 0
         for conf_file in self.get_list_of_config(package):
+            #pylint: disable=no-member
+            if not os.path.exists(conf_file):
+                # see https://github.com/xsuchy/rpmconf/issues/49
+                continue
             if self.diff:
                 conf_rpmnew = "{0}.rpmnew".format(conf_file)
                 conf_rpmsave = "{0}.rpmsave".format(conf_file)
