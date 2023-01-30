@@ -171,6 +171,7 @@ class RpmConf(object):
 
         """
         err_msg_template = "Warning: file {} is broken symlink. I'm using /dev/null instead.\n"
+        missing_file_template = "Warning: file {} is missing. I'm using /dev/null instead.\n"
         err_msg = ""
         if os.path.islink(file1):
             err_msg += "Info: '{0}' is symlink to '{1}'.\n".format(file1, os.readlink(file1))
@@ -181,7 +182,12 @@ class RpmConf(object):
                 err_msg += err_msg_template.format(file1)
                 file1 = "/dev/null"
         else:
-            fromdate = time.ctime(os.stat(file1).st_mtime)
+            if not os.path.exists(file1):
+                fromdate = ""
+                err_msg += missing_file_template.format(file1)
+                file1 = "/dev/null"
+            else:
+                fromdate = time.ctime(os.stat(file1).st_mtime)
         if os.path.islink(file2):
             err_msg += "Info: '{0}' is symlink to '{1}'.\n".format(file2, os.readlink(file2))
             if self.is_broken_symlink(file2):
@@ -191,14 +197,15 @@ class RpmConf(object):
                 err_msg += err_msg_template.format(file2)
                 file2 = "/dev/null"
         else:
-            todate = time.ctime(os.stat(file2).st_mtime)
+            if not os.path.exists(file2):
+                todate = ""
+                err_msg += missing_file_template.format(file2)
+                file2 = "/dev/null"
+            else:
+                todate = time.ctime(os.stat(file2).st_mtime)
         try:
             fromlines = open(file1).readlines()
-            if fromlines == []:
-                fromlines = [""]
             tolines = open(file2).readlines()
-            if tolines == []:
-                tolines = [""]
             diff = difflib.unified_diff(fromlines, tolines,
                                         file1, file2,
                                         fromdate, todate)
@@ -265,6 +272,9 @@ class RpmConf(object):
 
     def _ls_conf_file(self, conf_file, other_file):
         print("Configuration file '{}'".format(conf_file))
+        if not os.path.exists(conf_file):
+            print("File is missing. Using /dev/null instead.")
+            conf_file = "/dev/null"
         if self.selinux:
             print(subprocess.check_output(['/usr/bin/ls', '-ltrd', '--context',
                                            conf_file, other_file],
@@ -332,6 +342,8 @@ class RpmConf(object):
         result = 0
         for conf_file in self.get_list_of_config(package):
             if self.diff:
+                if not os.path.exists(conf_file):
+                    conf_file = "/dev/null"
                 conf_rpmnew = "{0}.rpmnew".format(conf_file)
                 conf_rpmsave = "{0}.rpmsave".format(conf_file)
                 conf_rpmorig = "{0}.rpmorig".format(conf_file)
@@ -365,7 +377,7 @@ class RpmConf(object):
 
     def _handle_rpmnew(self, conf_file, other_file):
         if not (self.is_broken_symlink(conf_file) or self.is_broken_symlink(other_file)) \
-            and filecmp.cmp(conf_file, other_file):
+            and os.path.exists(conf_file) and filecmp.cmp(conf_file, other_file):
             self._remove(other_file)
             return
 
@@ -422,7 +434,7 @@ class RpmConf(object):
 
     def _handle_rpmsave(self, conf_file, other_file):
         if not (self.is_broken_symlink(conf_file) or self.is_broken_symlink(other_file)) \
-            and filecmp.cmp(conf_file, other_file):
+            and os.path.exists(conf_file) and filecmp.cmp(conf_file, other_file):
             self._remove(other_file)
             return
 
