@@ -291,9 +291,7 @@ class RpmConf(object):
         # vimdiff, gvimdiff, meld return 0 even if file was not saved
         # we may handle it some way. check last modification? ask user?
         try:
-            if self.frontend == "vimdiff" or \
-                    self.frontend == "gvimdiff" or \
-                    self.frontend == "meld":
+            if self.frontend in ["vimdiff", "gvimdiff", "meld"]:
                 subprocess.check_call(
                     ["/usr/bin/{}".format(self.frontend),
                      conf_file, other_file])
