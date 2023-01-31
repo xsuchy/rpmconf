@@ -42,8 +42,11 @@ import rpm
 import termios
 
 __version__ = "1.0.60"
-#uncomment when rpm 4.13 is available
-#rpm.setInterruptSafety(False)
+
+if rpm.__version__ > "4.13.0":
+    rpm.setInterruptSafety(False)
+
+
 
 class RpmConf(object):
     """
