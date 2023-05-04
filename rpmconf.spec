@@ -17,6 +17,9 @@ BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  docbook-utils
 BuildRequires:  docbook-dtd31-sgml
+%if 0%{?rhel} > 9 || 0%{?fedora} > 38
+BuildRequires:  python%{python3_pkgversion}-setuptools
+%endif
 BuildRequires:  python%{python3_pkgversion}-sphinx
 BuildRequires:  python%{python3_pkgversion}-devel
 Requires:       %{name}-base
