@@ -6,7 +6,7 @@
 Name:           rpmconf
 Summary:        Tool to handle rpmnew and rpmsave files
 License:        GPL-3.0-only
-Version:        1.1.8
+Version:        1.1.9
 Release:        1%{?dist}
 URL:            https://github.com/xsuchy/rpmconf
 # source is created by:
@@ -122,6 +122,10 @@ pylint-3 rpmconf bin/rpmconf || :
 %dir %{_datadir}/rpmconf
 
 %changelog
+* Thu May 04 2023 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- Add BuildRequire on setuptools to fix distutils error on Python 3.12
+- when package config does not exists use /dev/null instead
+
 * Wed Nov 30 2022 Miroslav Suchý <msuchy@redhat.com> 1.1.8-1
 - use spdx license
 - 2135035 - change wording to avoid  confusion
