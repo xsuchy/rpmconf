@@ -43,7 +43,7 @@ import termios
 
 __version__ = "1.0.60"
 
-if rpm.__version__ > "4.13.0":
+if rpm.__version__ > "4.13.0" and rpm.__version__ < "4.18.0":
     rpm.setInterruptSafety(False)
 
 
