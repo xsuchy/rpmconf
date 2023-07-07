@@ -154,11 +154,11 @@ class RpmConf(object):
         :rtype: list
 
         """
-        files = rpm.fi(package) # pylint: disable=no-member
+        files = rpm.files(package) # pylint: disable=no-member
         result = []
         for rpm_file in files:
-            if rpm_file[4] & rpm.RPMFILE_CONFIG: # pylint: disable=no-member
-                file_name = rpm_file[0]
+            if rpm_file.fflags & rpm.RPMFILE_CONFIG: # pylint: disable=no-member
+                file_name = rpm_file.name
                 if self.root:
                     file_name = os.path.normpath(self.root + file_name)
                 result.append(file_name)
