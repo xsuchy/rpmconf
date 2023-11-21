@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: rpmconf
+Upstream-Contact: Miroslav Suchý <msuchy@redhat.com>
+Source: https://github.com/xsuchy/rpmconf
+
+Files: *
+Copyright: 2009 Miroslav Suchý <msuchy@redhat.com> 
+License: GPL-3.0-only
