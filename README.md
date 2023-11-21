@@ -91,7 +91,7 @@ This project is sponsored by [Red Hat](https://www.redhat.com/). You can [buy](h
 
 ## License
 
-GPLv3
+GPL-3.0-only
 
 ## Author
 

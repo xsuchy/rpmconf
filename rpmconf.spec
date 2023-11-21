@@ -103,19 +103,19 @@ pylint-3 rpmconf bin/rpmconf || :
 %endif
 
 %files
-%license LICENSE
+%license LICENSES/GPL-3.0-only.txt
 %{_sbindir}/rpmconf
 %{_mandir}/man8/rpmconf.8*
 %doc README.md
 
 %files -n python%{python3_pkgversion}-rpmconf
-%license LICENSE
+%license LICENSES/GPL-3.0-only.txt
 %{python3_sitelib}/rpmconf/
 %{python3_sitelib}/rpmconf-*.egg-info
 %{_mandir}/man3/rpmconf.3*
 
 %files -n python%{python3_pkgversion}-rpmconf-doc
-%license LICENSE
+%license LICENSES/GPL-3.0-only.txt
 %doc docs/build/html/
 
 %files base
