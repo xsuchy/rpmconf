@@ -29,6 +29,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--all", dest="all", action="store_true",
                         help="Check configuration files of all packages.")
+    parser.add_argument("--diff-frontend", dest="diff_frontend", action="store",
+                        metavar="DIFF",
+                        help="Define which frontend should be used for displaying diff."
+                             " For list of valid types see man page.")
     parser.add_argument("-c", "--clean", dest="clean", action="store_true",
                         help="Find and delete orphaned"
                              " .rpmnew and .rpmsave files.")
@@ -38,7 +42,7 @@ def main():
                         help="Non-interactive diff mode. "
                              "Useful to audit configs. "
                              "Use with -a or -o options.")
-    parser.add_argument("-f", "--frontend", dest="frontend", action="store",
+    parser.add_argument("-f", "--frontend", "--merge-frontend", dest="merge_frontend", action="store",
                         metavar="EDITOR",
                         help="Define which frontend should be used for merging."
                              " For list of valid types see man page.")
@@ -86,10 +90,11 @@ def main():
 
     rconf = rpmconf.RpmConf(packages=None if args.all else owner,
                             clean=args.clean, debug=args.debug,
-                            diff=args.diff, frontend=args.frontend,
+                            diff=args.diff, merge_frontend=args.merge_frontend,
                             selinux=args.selinux, test=args.test,
                             exclude=args.exclude, root=args.root,
-                            unattended=args.unattended)
+                            unattended=args.unattended,
+                            diff_frontend=args.diff_frontend)
 
     try:
         rconf.run()
