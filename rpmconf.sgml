@@ -29,7 +29,7 @@
         <arg>-o<replaceable>&lt;package&gt;</replaceable>, --owner=<replaceable>&lt;package&gt;</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <arg>-f<replaceable>&lt;type&gt;</replaceable> --frontend=<replaceable>&lt;type&gt;</replaceable></arg>
+        <arg>-f<replaceable>&lt;type&gt;</replaceable> --frontend=<replaceable>&lt;type&gt;</replaceable> --merge-frontend=<replaceable>&lt;type&gt;</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
         <arg>--root <replaceable>&lt;ROOT&gt;</replaceable></arg>
@@ -92,9 +92,15 @@
         </listitem>
     </varlistentry>
     <varlistentry>
-        <term>-f&lt;type&gt;, --frontend=&lt;type&gt;</term>
+        <term>-f&lt;type&gt;, --frontend=&lt;type&gt;, --merge-frontend=&lt;type&gt;</term>
         <listitem>
-            <para>Define which frontend should be used for merging. Valid options are: vimdiff, gvimdiff, diffuse, kdiff3, meld, sdiff and env. When set to env, the command to use is taken from the environment variable $MERGE. The default is env.</para>
+            <para>Define which frontend should be used for merging. Valid options are: vimdiff, gvimdiff, diffuse, kdiff3, kompare, meld, sdiff and env. When set to env, the command to use is taken from the environment variable $MERGE. The default is env.</para>
+        </listitem>
+    </varlistentry>
+    <varlistentry>
+        <term>--diff-frontend=&lt;type&gt;</term>
+        <listitem>
+            <para>Define which external frontend should be used for displaying diffs. Valid options are: vimdiff, gvimdiff, diffuse, kdiff3, kompare, meld, sdiff and env. When set to env, the command to use is taken from the environment variable $DIFF. The default is to use the internal Python diff.</para>
         </listitem>
     </varlistentry>
     <varlistentry>
