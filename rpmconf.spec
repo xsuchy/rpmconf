@@ -17,28 +17,17 @@ BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  docbook-utils
 BuildRequires:  docbook-dtd31-sgml
-%if 0%{?rhel} > 9 || 0%{?fedora} > 38
-BuildRequires:  python%{python3_pkgversion}-setuptools
-%endif
 BuildRequires:  python%{python3_pkgversion}-sphinx
 BuildRequires:  python%{python3_pkgversion}-devel
 Requires:       %{name}-base
 Requires:       python%{python3_pkgversion}-rpmconf
-%if 0%{?rhel} == 7
-Requires:       python36-rpm
-BuildRequires:  python36-rpm
-%else
 Requires:       rpm-python3
 BuildRequires:  rpm-python3
 %if %{with tests}
 BuildRequires:  python%{python3_pkgversion}-pylint
 BuildRequires:  python%{python3_pkgversion}-six
 %endif
-%endif
 # mergetools
-%if 0%{?rhel} == 7
-  # nothing
-%else
 Suggests: diffuse
 Suggests: diffutils
 Suggests: kdiff3
@@ -47,7 +36,6 @@ Suggests: vim-X11
 Suggests: vim-enhanced
 # sdiff
 Suggests: diffutils
-%endif
 
 %description
 This tool search for .rpmnew, .rpmsave and .rpmorig files and ask you what to do
@@ -78,21 +66,21 @@ Directory hierarchy for installation scripts, which are handled by rpmconf.
 %prep
 %setup -q
 
+%generate_buildrequires
+%pyproject_buildrequires
+
 %build
 sed -i 's/__version__ = .*/__version__ = "%{version}"/' rpmconf/rpmconf.py
 sed -i 's/version = .*,/version = "%{version}",/' setup.py 
-%{__python3} setup.py build
+%pyproject_wheel
 docbook2man rpmconf.sgml
-%if 0%{?rhel} == 7
-make -C docs html man SPHINXBUILD=sphinx-build-3.6
-%else
 make -C docs html man
-%endif
 
 %install
-%{__python3} setup.py install --skip-build \
-    --install-scripts %{_sbindir} \
-    --root %{buildroot}
+%pyproject_install
+#%{__python3} setup.py install --skip-build \
+#    --install-scripts %{_sbindir} \
+#    --root %{buildroot}
 install -D -m 644 rpmconf.8 %{buildroot}%{_mandir}/man8/rpmconf.8
 install -D -m 644 docs/build/man/rpmconf.3 %{buildroot}%{_mandir}/man3/rpmconf.3
 mkdir -p %{buildroot}%{_datadir}/rpmconf/
@@ -111,7 +99,7 @@ pylint-3 rpmconf bin/rpmconf || :
 %files -n python%{python3_pkgversion}-rpmconf
 %license LICENSES/GPL-3.0-only.txt
 %{python3_sitelib}/rpmconf/
-%{python3_sitelib}/rpmconf-*.egg-info
+%{python3_sitelib}/rpmconf-*.dist-info
 %{_mandir}/man3/rpmconf.3*
 
 %files -n python%{python3_pkgversion}-rpmconf-doc
